@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디찾기</title>
+    <link rel="stylesheet" href="/css/login.css"/>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#btnSearchUserId").on("click", function() {
+                var formData = $("#searchUserIdForm").serialize(); // 폼 데이터 직렬화
+
+                $.ajax({
+                    url: "/user/SearchUserIdProc",  // 서버의 아이디 찾기 처리 경로
+                    type: "get",  // 메서드 타입 변경 가능: GET 혹은 POST
+                    dataType: "json",
+                    data: formData,
+                    success: function (json) {
+                        alert(json.msg); // 서버로부터 받은 메시지를 알림
+                        location.href = "/user/login";
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+
+
+<body>
+
+
+
+    <form id ="searchUserIdForm" class="login-form">
+        <div class="login-page">
+            <div class="form">
+                <h1>아이디 찾기</h1>
+        <div style="margin-bottom: 10px;">
+
+            <input type="text" id="userName" name="userName" required placeholder="이름">
+        </div>
+        <div style="margin-bottom: 10px;">
+
+            <input type="email" id="email" name="email" required placeholder="이메일">
+        </div>
+        <button type="button" id="btnSearchUserId">아이디 찾기</button>
+
+    </form>
+
+
+
+    <p class="message"> 회원이 아니신가요? <a href="userRegForm">회원가입 </a></p>
+    <p class="message"> 아이디찾기 <a href="SearchUserId"> 로그인</a></p>
+    <p class="message"> 비밀번호찾기 <a href="newPassword"> 비밀번호</a></p>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:700" rel="stylesheet">
+    <title>메인화면</title>
+    <link rel="stylesheet" href="/css/main.css"/>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // 로그인 상태 확인 함수
+
+            // 로그인 페이지로 이동
+            $("#btnLogin").on("click", function() {
+                location.href = "/user/login";
+            });
+
+            // 사용자 등록 페이지로 이동
+            $("#btnUserReg").on("click", function() {
+                location.href = "/user/userRegForm";
+            });
+
+            // 공지사항 목록 페이지로 이동
+            $("#btnNotice").on("click", function() {
+                location.href = "/notice/noticeList";
+            });
+
+            // 로그아웃 요청
+                $('#btnLogout').click(function() {
+                    $.ajax({
+                        url: '/user/logout', // 로그아웃 처리를 위한 서버의 URL
+                        type: 'POST', // HTTP 메소드
+                        dataType: 'JSON', // 서버에서 받을 데이터 타입
+                        success: function(json) {
+                            if (json.result === 1) {
+                                alert(json.msg); // 성공 메시지 출력
+                                window.location.href = '/user/login'; // 로그인 페이지로 이동
+                            } else {
+                                alert(json.msg); // 로그아웃 실패 메시지 출력
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('로그아웃 실패: ' + xhr.responseText); // 서버 에러 메시지 출력
+                        }
+                    });
+                });
+            });
+    </script>
+
+
+
+
+</head>
+
+<body>
+
+<div class="menu-btn">
+    <i class="fas fa-bars fa-2x"></i>
+</div>
+<br/>
+<br/>
+
+<div class="container">
+    <!-- Nav -->
+    <nav class="main-nav">
+
+
+        <h2>yoYang Hosp</h2>
+
+        <ul class="main-menu">
+
+            <li><a href="/user/profile">마이페이지</a></li>
+            <li><a href="#">고객센터</a></li>
+            <li><a href="/notice/noticeList">게시판</a></li>
+           <button id="btnLogout">로그아웃</button>
+
+
+        </ul>
+        <ul class="right-menu">
+            <li>
+                <a href="#">
+                    <i class="fas fa-search"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Showcase -->
+    <br/>
+    <br/>
+    <br/>
+
+    <header>
+
+        <div class="mainText">
+            <span class="health">건강</span>과 <span class="comfort">편안함</span>의 시작,
+        </div>
+        <div class="subText">
+            Yoyang Hosp와 함께하는 요양병원 찾기.
+        </div>
+    </header>
+
+    <br/>
+    <br/>
+
+    <!-- Home cards 1 -->
+    <section class="home-cards">
+        <div>
+            <a href="/hosp/hospInfo">
+            <img src="/assets/img/search.PNG.png" alt="Logo" class="logo-image">
+            <h3 class="centered-title">시설 찾기</h3>
+            </a>
+
+        </div>
+        <div>
+            <a href="/notice/noticeList">
+            <img src="/assets/img/hosp2.PNG.png" alt="Logo" class="logo-image">
+            <h3 class="centered-title">요양병원</h3>
+            </a>
+
+        </div>
+        <div>
+            <a href="/notice/noticeList">
+                <img src="/assets/img/hosp3.PNG.png" alt="Logo" class="logo-image">
+            <h3 class="centered-title">실버타운</h3>
+            </a>
+
+
+        </div>
+        <div>
+            <a href="/notice/noticeList">
+            <img src="/assets/img/hosp4.PNG.png" alt="Logo" class="logo-image">
+            <h3 class="centered-title">양로원</h3>
+            </a>
+
+
+        </div>
+    </section>
+    <br/>
+    <br/>
+
+
+    <hr/>
+    <!-- Home cards 2 -->
+    <div class="SearchText">
+        <h3 class="title">시설 PICK! 영상으로 만나는 추천 시설</h3>
+    </div>
+    <br/>
+
+    <section class="home-cards">
+
+        <div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Bsga3tYAEmo"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/f0btk_6Kwgo"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+    </section>
+
+
+    <hr/>
+    <div class="SearchText">
+        <h3 class="title">최근 본 요양병원 정보 </h3>
+    </div>
+    <br/>
+
+    <section class="home-cards">
+        <div>
+            <h3>암면역관리 큰나무요양병원 </h3>
+            <p>
+                항암부작용 관리는 국립암센터 인근 큰나무요양병원에서 받아보세요. 암환우의 치료는 큰나무요양병원 에서.
+            </p>
+            <a href="#">더 보기 <i class="fas fa-chevron-right"></i></a>
+        </div>
+
+    </section>
+
+    <hr/>
+    <div class="SearchText">
+        <h3 class="title">모두가 궁금해 하는 정보 </h3>
+    </div>
+
+    <div tabindex="0" class="clickable" onclick="toggleText('text0')">
+        휠체어 신청을 하고싶어요. 무료로 지원 가능한가요?
+    </div>
+    <div id="text0" class="hidden-text">
+        현재 휠체어 신청은 무료로 지원되고 있습니다. 자세한 정보는 해당 링크를 참조해주세요.
+    </div>
+
+    <div tabindex="0" class="clickable" onclick="toggleText('text1')">
+        요양원과 실버타운의 차이점을 알려주세요.
+    </div>
+    <div id="text1" class="hidden-text">
+        요양원은 의료적 지원이 필요한 노인을 위한 시설이며, 실버타운은 자립적 생활을 할 수 있는 노인을 위한 주거형 시설입니다.
+    </div>
+
+    <div tabindex="0" class="clickable" onclick="toggleText('text2')">
+        요양원 입원비용은 얼마인가요?
+    </div>
+    <div id="text2" class="hidden-text">
+        요양원 입원비용은 시설, 위치, 제공되는 서비스에 따라 다르며, 평균적으로 월 200만원에서 500만원 사이입니다.
+    </div>
+
+    <script>
+        function toggleText(elementId) {
+            var text = document.getElementById(elementId);
+            if (text.style.display === 'none') {
+                text.style.display = 'block'; // 텍스트를 표시
+            } else {
+                text.style.display = 'none'; // 텍스트를 숨김
+            }
+        }
+    </script>
+
+    <br/>
+    <br/>
+
+
+
+</div>
+
+</body>
+</html>

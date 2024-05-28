@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperation Hospitals Information</title>
+</head>
+<body>
+<h1>Recuperation Hospitals Information</h1>
+<div id="hospitals-container"></div>
+
+<script>
+    // 페이지 로드 시 요양병원 정보를 가져와서 표시하는 함수
+    function getHospitalInformation() {
+        // API 호출을 위한 URL
+        const apiUrl = "/api/retrieveData";
+
+        // XMLHttpRequest 객체 생성
+        const xhr = new XMLHttpRequest();
+
+        // API 호출
+        xhr.open("GET", apiUrl, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // API 응답 받음
+                    const hospitals = JSON.parse(xhr.responseText);
+                    displayHospitals(hospitals);
+                } else {
+                    console.error("Failed to fetch hospital information:", xhr.statusText);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    // 요양병원 정보를 화면에 표시하는 함수
+    function displayHospitals(hospitals) {
+        const hospitalsContainer = document.getElementById("hospitals-container");
+        hospitals.forEach(hospital => {
+            const hospitalInfo = document.createElement("div");
+            hospitalInfo.innerHTML = `
+                    <h2>${hospital.bizplcNm}</h2>
+                    <p><strong>State:</strong> ${hospital.bsnStateNm}</p>
+                    <p><strong>Bed Count:</strong> ${hospital.sickbdCnt}</p>
+                    <p><strong>Treatment Subject:</strong> ${hospital.treatSbjectCont}</p>
+                    <p><strong>Address:</strong> ${hospital.refineLotnoAddr}</p>
+                    <hr>
+                `;
+            hospitalsContainer.appendChild(hospitalInfo);
+        });
+    }
+
+    // 페이지 로드 시 요양병원 정보 가져오기
+    window.onload = function() {
+        getHospitalInformation();
+    };
+</script>
+</body>
+</html>

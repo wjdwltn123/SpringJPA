@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>커뮤니티</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn-icons-pkg.bringhub.com/bootstrap-icons-font/v1.10.0/bootstrap-icons-font.css"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/search-bar.css">
+    <link rel="stylesheet" href="/css/articles/table-header.css">
+    <link rel="icon" href="/assets/img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/img/logo.png" type="image/x-icon">
+    <style>
+
+        body, html {
+            height: 100%; /* 전체 높이 설정 */
+            margin: 0; /* 기본 마진 제거 */
+            padding: 0; /* 기본 패딩 제거 */
+        }
+
+        .right {
+            position: absolute; /* 절대 위치 설정 */
+            top: 0; /* 상단에 위치 */
+            right: 0; /* 오른쪽에 위치 */
+            list-style: none; /* 리스트 스타일 제거 */
+            padding: 0; /* 패딩 제거 */
+            margin: 20px; /* 주변 여백 설정 */
+        }
+
+        .right li {
+            display: inline; /* 리스트 항목을 가로로 나열 */
+            margin-left: 15px; /* 리스트 항목 사이의 왼쪽 여백 */
+        }
+
+        .right a {
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: black; /* 글자 색상 */
+            font-weight: bold; /* 글자 굵게 */
+        }
+
+        .right a:hover {
+            text-decoration: underline; /* 호버 시 밑줄 */
+            color: blue; /* 호버 시 색상 변경 */
+        }
+
+        .title h2 {
+            text-align: left;
+        }
+
+        @font-face {
+            font-family: 'NIXGONM-Vb';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/NIXGONM-Vb.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+
+        * {
+            font-family: 'NIXGONM-Vb';
+        }
+
+        button {
+            z-index: 10;
+            margin-top: -50px;
+            padding: 12px 40px;
+            border: none;
+            background-color: #2ecb62;
+            color: #fff;
+            font-size: 19px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        #btnWrite {
+            background-color: #4CAF50FF;
+        }
+
+        /* btnLogin에 대한 hover 효과 */
+        #btnWrite:hover {
+            background-color: #43A047FF; /* 새로운 배경색 */;
+        }
+
+        header {
+            z-index: 10;
+            background-color: #ffffff;
+            color: #2ecb62;
+            padding: 20px;
+            border-bottom: 3px solid #4CAF50FF;
+        }
+
+        .card {
+            z-index: 10;
+            cursor: pointer;
+            background-color: rgba(251, 251, 251, 0.9); /* Adjust opacity as needed */
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #2ecb62; /* Optional: might blend well with a light background */
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+            background-color: rgba(251, 251, 251, 1); /* Solid color on hover */
+        }
+
+        footer {
+            background-color: #2b2b36;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #fafafa;
+            font-size: 2.5rem; /* 폰트 크기 증가 */
+            text-align: center;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* 텍스트에 그림자 효과 추가 */
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/js/notice.js"></script>'
+
+    <link rel="stylesheet" type="text/css" href="/css/noticeInfo.css"/>
+</head>
+<body style="background-color: #FFFFFF">
+<header class="p-3">
+    <div class="container d-flex justify-content-between align-items-center">
+
+    </div>
+</header>
+
+
+<ul class="right">
+    <li><a href="/html/index.html">메인페이지</a></li>
+    <li><a href="#">고객센터</a></li>
+    <li><a href="/user/profile">마이페이지</a></li>
+</ul>
+
+<main class="container my-5">
+
+
+
+    <div class="title" style="border-bottom: 2px solid #2ecb62;">
+        <h2 style="color: #000000;">요양병원 게시판</h2>
+    </div>
+
+
+    <div class="container centered" style="padding-top: 5px">
+        <p style="color: #000000;">요양병원과 관련된 경험과 정보를 나누는 공간이며, 요양병원과 관련된 정보를 서로 공유 할 수 있습니다<br>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-6" th:each="dto: ${rList}">
+            <div class="card" th:onclick="doDetail([[${dto.noticeSeq}]])">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${dto.title}"></h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="bi bi-person"></i> <span th:text="${dto.userId}"
+                                                               style="font-weight: bold; color: #3595a4;"></span>
+                            &middot;
+                            <i class="bi bi-calendar"></i> <span th:text="${dto.regDt}"></span> &middot;
+                            <i class="bi bi-eye"></i> <span th:text="'조회수 : ' + ${dto.readCnt}"></span>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <ul class="pagination">
+                <li style="z-index: 10">
+                    <a onclick="prevPage()" style="font-size: 30px; color: #000000; cursor: pointer; margin-right: 80px;"><strong>&lt;</strong></a>
+                </li>
+                <li style="z-index: 10">
+                    <a onclick="nextPage()" style="font-size: 30px; color: #000000; cursor: pointer; margin-left: 80px;"><strong>&gt;</strong></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end mb-4">
+        <button id="btnWrite" type="button" onclick="window.location.href='/notice/noticeReg';">글쓰기</button>
+    </div>
+</main>
+
+</body>
+</html>

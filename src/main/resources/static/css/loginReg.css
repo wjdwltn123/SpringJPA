@@ -1,0 +1,189 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.login-page {
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
+}
+.form {
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.form button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 25px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+    background: #43A047;
+}
+.form .message {
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
+}
+.form .message a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+.form .register-form {
+    display: none;
+}
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 300px;
+    margin: 0 auto;
+}
+.container:before, .container:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.container .info {
+    margin: 50px auto;
+    text-align: center;
+}
+.container .info h1 {
+    margin: 0 0 15px;
+    padding: 0;
+    font-size: 36px;
+    font-weight: 300;
+    color: #1a1a1a;
+}
+.container .info span {
+    color: #4d4d4d;
+    font-size: 12px;
+}
+.container .info span a {
+    color: #000000;
+    text-decoration: none;
+}
+.container .info span .fa {
+    color: #EF3B3A;
+}
+body {
+    background: #76b852; /* fallback for old browsers */
+    background: rgb(141,194,111);
+    background: linear-gradient(90deg, rgba(141,194,111,1) 0%, rgba(118,184,82,1) 50%);
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+header-title {
+    text-align: center;
+    margin-top: 50px; /* 상단 마진, 필요에 따라 조절 가능 */
+    font-weight: bold; /* 글씨체를 볼드체로 설정 */
+    color: white; /* 텍스트 색상을 하얀색으로 설정 */
+    font-family: Arial, sans-serif; /* 글꼴을 Arial, sans-serif로 설정 */
+}
+
+.check-button button {
+    margin-bottom: 15px; /* 하단 여백 추가 */
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 100%; /* 버튼의 너비 */
+    border: 0;
+    padding: 5px 10px; /* 상하 패딩을 앞px로, 좌우 패딩을 뒤px로 조정 */
+    color: #FFFFFF;
+    font-size: 20px; /* 글자 크기 */
+    cursor: pointer;
+}
+
+@font-face {
+    font-family: 'NIXGONM-Vb';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/NIXGONM-Vb.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+* {
+    font-family: 'NIXGONM-Vb';
+}
+
+button {
+    z-index: 10;
+    margin-top: -0px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #2451d2;
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+
+#btnWrite {
+    background-color: #4CAF50FF;
+}
+
+/* btnLogin에 대한 hover 효과 */
+#btnWrite:hover {
+    background-color: #43A047FF; /* 새로운 배경색 */;
+}
+
+
+.card {
+    z-index: 10;
+    cursor: pointer;
+    background-color: rgba(251, 251, 251, 0.9); /* Adjust opacity as needed */
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #2ecb62; /* Optional: might blend well with a light background */
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(232, 116, 116, 0.5);
+    background-color: rgb(46, 203, 98); /* Solid color on hover */
+}
+
+footer {
+    background-color: #2b2b36;
+    color: #2ecb62;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #000000;
+    font-size: 2.5rem; /* 폰트 크기 증가 */
+    text-align: center;
+    text-shadow: 3px 3px 5px rgb(255, 255, 255); /* 텍스트에 그림자 효과 추가 */
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+
+

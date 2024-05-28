@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/loginReg.css"/>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        // 아이디 중복체크여부 (중복 Y / 중복아님 : N)
+        let userIdCheck = "Y";
+
+        // HTML로딩이 완료되고, 실행됨
+        $(document).ready(function () {
+            let f = document.getElementById("f"); // form 태그
+
+            // Handle toggle between sign-up and sign-in panels
+            $("#UserReg").on("click", function () {
+                $("#container").addClass("active");
+            });
+
+            $("#Login").on("click", function () {
+                $("#container").removeClass("active");
+            });
+
+            // 회원가입
+            $("#btnUserId").on("click", function (){
+                userIdExists(f)
+            })
+            $("#btnAddr").on("click", function (){
+                kakaoPost(f);
+            })
+            $("#btnSend").on("click", function (){
+                doSubmit(f);
+            })
+
+            // 로그인
+            $("#btnLogin").on("click", function () {
+                let f = $("#f")[0]; // form태그
+
+                if (f.userId.value === "") {
+                    alert("아이디를 입력하세요.");
+                    $("#userId").focus();
+                    return;
+                }
+
+                if (f.password.value === "") {
+                    alert("비밀번호를 입력하세요.");
+                    $("#password").focus();
+                    return;
+                }
+
+                // Ajax 호출해서 로그인
+                $.ajax({
+                    url: "/user/loginProc",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송결과는 JSON으로 받기
+                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경
+                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                        if (json.result === 1) { //로그인 성공
+                            alert(json.msg); //메시지 띄우기
+                            location.href = "/main/main.html"; // 로그인 성공 페이지 이동
+                        } else { // 로그인 실패
+                            alert(json.msg); // 메시지 띄우기
+                            $("#userId").focus(); // 아이디 입력 항목에 마우스 커서 이동
+                        }
+                    }
+                })
+            })
+        })
+
+        // 회원아이디 중복 체크
+        function userIdExists(f) {
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+            // Ajax 호출해서 아이디 중복 체크
+            $.ajax({
+                url: "/user/getUserIdExists",
+                type: "post", // 전송방식은 Post
+                dataType: "JSON", // 전송결과는 JSON으로 받기
+                data: $(f).serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경
+                success: function (json) { // 호출이 성공했다면..
+                    if (json.existsYn === "Y") {
+                        alert("이미 사용중인 아이디입니다.");
+                        f.userId.focus();
+                    } else { // 회원가입 실패
+                        alert("가입 가능한 아이디입니다.");
+                        userIdCheck = "N";
+                    }
+                }
+            })
+        }
+
+        // 카카오 우편번호 조회 API 호출
+        function kakaoPost(f) {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    // kakao에서 제공하는 data는 JSON 구조로 주소 조회 결과값을 전달
+                    // 주요 결과값
+                    // 주소 : data.addres
+                    // 우편번호 : data.zonecode
+                    let address = data.address // 주소
+                    let zonecode = data.zonecode; // 우편번호
+                    f.addr1.value = "(" + zonecode + ")" + address
+                }
+            }).open();
+        }
+
+        /*#########*/
+        /* 회원가입 */
+        /*#########*/
+
+        function doSubmit(f) {
+            if (f.userId.value === "") {
+                alert("아이디를 입력하세요.");
+                f.userId.focus();
+                return;
+            }
+
+            if (userIdCheck !== "N") {
+                alert("아이디 중복 체크 및 중복되지 않은 아이디로 가입 바랍니다.");
+                f.userId.focus();
+                return;
+            }
+
+            if (f.userName.value === "") {
+                alert("이름을 입력하세요.");
+                f.userName.focus();
+                return;
+            }
+
+            if (f.password.value === "") {
+                alert("비밀번호를 입력하세요.");
+                f.password.focus();
+                return;
+            }
+
+            if (f.password2.value === "") {
+                alert("비밀번호를 입력하세요.");
+                f.password2.focus();
+                return;
+            }
+
+            if (f.password.value !== f.password2.value) {
+                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                f.password.focus();
+                return;
+            }
+
+            /*    if (f.addr1.value === "") {
+                    alert("주소를 입력하세요.");
+                    f.addr1.focus();
+                    return;
+                }
+
+                if (f.addr2.value === "") {
+                    alert("상세주소를 입력하세요.");
+                    f.addr2.focus();
+                    return;
+                */
+
+            $.ajax({
+                url: "/user/insertUserInfo",
+                type: "post",
+                dataType: "JSON",
+                data: $("#f").serialize(),
+                success: function (json) {
+                    if (json.result === 1) {
+                        alert(json.msg);
+                        location.href = "/user/login";
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+
+<form id="f" class="register-form">
+    <div class="login-page">
+        <div class="form">
+            <h2 class="header-title">회원가입하기</h2>
+            <div class="check-button">
+                <input type="text" name="userId" placeholder="아이디"/>
+                <button id="btnUserId" class="button" type="button">중복확인</button>
+            </div>
+
+            <input type="text" name="userName" placeholder="이름"/>
+            <input type="password" name="password" placeholder="비밀번호"/>
+            <input type="password" name="password2" placeholder="비밀번호 확인"/>
+            <input type="email"  name="email" placeholder="이메일"/>
+            <input type="text" name="addr1" placeholder="주소1"/>
+            <input type="text" name="addr2" placeholder="상세주소"/>
+            <button id="btnSend" type="button">회원가입</button>
+
+            <p class="message">이미 회원이십니까? <a href="login"> 로그인하러 가기</a></p>
+
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

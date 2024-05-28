@@ -1,0 +1,392 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic);
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic);
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 16px;
+    color: #FAFBF9;
+    background-color: #151514;
+}
+
+section#userProfileWrapper {
+    width: 93%;
+    min-width: 850px;
+    margin: 0px auto;
+    /*margin-top: 60px;*/
+    position: relative;
+}
+
+section#userProfileContainer {
+    width: 90%;
+    min-height: 280px;
+    margin: 0px auto;
+    position: relative;
+    background-color: #1F1F1E;
+    padding: 30px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+section#userProfileHeader {
+    height: 180px;
+    max-height: 180px;
+    min-height: 180px;
+    margin: -30px;
+    margin-bottom: 30px;
+    position: relative;
+    background-color: #1c1c1b;
+}
+
+section#userProfileHeader img {
+    border-radius: 100%;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+    max-width: 120px;
+    max-height: 120px;
+    margin-bottom: -5px;
+}
+
+section#userProfileHeader a#profileEditAvatar {
+    border-radius: 100%;
+    position: absolute;
+    top: 29px;
+    left: 29px;
+    width: 122px;
+    height: 122px;
+    min-width: 122px;
+    min-height: 122px;
+    max-width: 122px;
+    max-height: 122px;
+    line-height: 120px;
+    text-align: center;
+    background-color: rgba(21, 21, 20, 0);
+    color: transparent;
+    text-decoration: none;
+    font-size: 0px;
+    letter-spacing: 2px;
+    padding-left: 4px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -webkit-transition: 0.3s background-color linear, 0.3s color linear;
+    -moz-transition: 0.3s background-color linear, 0.3s color linear;
+    -ms-transition: 0.3s background-color linear, 0.3s color linear;
+    -o-transition: 0.3s background-color linear, 0.3s color linear;
+    transition: 0.3s background-color linear, 0.3s color linear;
+}
+
+section#userProfileHeader a#profileEditAvatar:hover {
+    background-color: rgba(21, 21, 20, .85);
+    color: #FAFBF9;
+    font-size: 12.8px;
+}
+
+section#userProfileHeader h1 {
+    font-weight: 300;
+    font-size: 2.25em;
+    position: absolute;
+    left: 170px;
+    padding: 0px;
+    margin: 0px;
+    color: #FAFBF9;
+}
+
+section#userProfileHeader h2 {
+    font-weight: 300;
+    font-size: 1.05em;
+    position: absolute;
+    left: 172px;
+    padding: 0px;
+    padding-top: 42px;
+    margin: 0px;
+    color: #80807e;
+}
+
+section#userProfileHeader h1,
+section#userProfileHeader h2 {
+    top: 54px;
+    letter-spacing: 1px;
+}
+
+section#userProfileHeader div#statusBit {
+    position: absolute;
+    top: 11px;
+    right: 15px;
+    font-size: .75em;
+    color: #4C4C4B;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+section#userProfileHeader div#statusBit:after {
+    content: "";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background-color: #80807e;
+    /*background-color: #9e2624;*/
+    border-radius: 100%;
+    margin-left: 5px;
+}
+
+section#userProfileContainer a#editProfileLink {
+    position: absolute;
+    right: 15px;
+    top: 136px;
+    background-color: rgba(41, 41, 40, .4);
+    color: rgba(128, 128, 126, .25);
+    border: 1px solid;
+    border-color: rgba(21, 21, 20, .5);
+    display: inline-block;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 5px;
+    -webkit-transition: 0.3s background-color linear, 0.3s color linear, 0.3s border-color linear;
+    -moz-transition: 0.3s background-color linear, 0.3s color linear, 0.3s border-color linear;
+    -ms-transition: 0.3s background-color linear, 0.3s color linear, 0.3s border-color linear;
+    -o-transition: 0.3s background-color linear, 0.3s color linear, 0.3s border-color linear;
+    transition: 0.3s background-color linear, 0.3s color linear, 0.3s border-color linear;
+}
+
+section#userProfileContainer a#editProfileLink:hover {
+    background-color: rgba(41, 41, 40, 1);
+    color: rgba(128, 128, 126, 1);
+    border-color: rgba(21, 21, 20, 1);
+}
+
+section#userProfileContainer section#userProfileContent {
+    margin: -10px;
+}
+
+section#userProfileContainer section#userProfileContent div.upiContainer {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 10px;
+}
+
+section#userProfileContainer section#userProfileContent div.upiContainer-Full {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 10px 0px;
+    margin-bottom: 10px;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock {
+    display: table-cell;
+    width: 20%;
+    min-width: 350.5px;
+    background-color: rgba(28, 28, 27, .95);
+    border: 1px solid #151514;
+    color: #80807E;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock h3 {
+    display: block;
+    font-size: 1.3em;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    padding: 0px;
+    padding-bottom: 10px;
+    margin: 0px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #D3D3D3;
+    color: #A9A9A9;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock div.upiItem {
+    color: #FAFBF9;
+    margin-top: 3px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+}
+
+section#userProfileContainer section#userProfileContent div.upiContainer-Full section.upiBlock div.upiItem {
+    margin-top: 13px;
+    white-space: pre-wrap;
+    overflow: initial;
+    text-overflow: initial;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock div.upiItem:first-of-type {
+    margin-top: 0px;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock div.upiItem span.upiTitle {
+    font-weight: 400;
+    color: #80807E;
+}
+
+section#userProfileContainer section#userProfileContent section.upiBlock div.upiItem span.upiTitle:after {
+    content: ": ";
+}
+
+section#userProfileContainer section#userProfileContent a {
+    text-decoration: none;
+    font-weight: 400;
+}
+
+section#userProfileContainer section#userProfileContent a:link,
+section#userProfileContainer section#userProfileContent a:visited {
+    color: #80807E
+}
+
+section#userProfileContainer section#userProfileContent a:hover,
+section#userProfileContainer section#userProfileContent a:active {
+    color: #9e2624;
+}
+
+.top-right-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed; /* 고정 위치 */
+    top: 0; /* 상단에서부터의 거리 */
+    right: 350px; /* 오른쪽에서부터의 거리 */
+}
+
+.header-content {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 양쪽 정렬로 h1은 왼쪽, 메뉴는 오른쪽에 위치 */
+    width: 100%; /* 헤더 컨텐츠의 너비를 최대로 설정 */
+}
+
+.header-content h1 {
+    /* h1에 대한 추가 스타일이 필요하면 여기에 추가 */
+}
+.menu {
+    float: right; /* 메뉴를 오른쪽으로 이동 */
+}
+
+.menu li {
+    display: inline-block; /* 메뉴 항목을 인라인으로 표시 */
+    margin-left: 10px; /* 항목 사이의 간격 */
+}
+
+.menu a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #FFFFFF; /* 링크 텍스트 색상을 하얀색으로 변경 */
+}
+
+.menu a:hover {
+    text-decoration: underline; /* 마우스 오버 시 밑줄 추가 */
+    color: #FFFFFF; /* 마우스 오버 시 텍스트 색상을 하얀색으로 유지 */
+}
+
+.right {
+    position: absolute; /* 절대 위치 설정 */
+    top: 0; /* 상단에 위치 */
+    right: 0; /* 오른쪽에 위치 */
+    list-style: none; /* 리스트 스타일 제거 */
+    padding: 0; /* 패딩 제거 */
+    margin: 20px; /* 주변 여백 20px 설정 */
+}
+
+.right li {
+    display: inline; /* 리스트 항목을 가로로 나열 */
+    margin-left: 15px; /* 리스트 항목 사이의 왼쪽 여백 */
+}
+
+.right a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #ffffff; /* 글자 색상 */
+}
+
+.right a:hover {
+    text-decoration: underline; /* 호버 시 밑줄 */
+    color: blue; /* 호버 시 색상 변경 */
+}
+
+
+@font-face {
+    font-family: 'NIXGONM-Vb';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/NIXGONM-Vb.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+* {
+    font-family: 'NIXGONM-Vb';
+}
+
+button {
+    z-index: 10;
+    margin-top: -0px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #2451d2;
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+
+#btnWrite {
+    background-color: #4CAF50FF;
+}
+
+/* btnLogin에 대한 hover 효과 */
+#btnWrite:hover {
+    background-color: #43A047FF; /* 새로운 배경색 */;
+}
+
+
+.card {
+    z-index: 10;
+    cursor: pointer;
+    background-color: rgba(251, 251, 251, 0.9); /* Adjust opacity as needed */
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #2ecb62; /* Optional: might blend well with a light background */
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(232, 116, 116, 0.5);
+    background-color: rgb(46, 203, 98); /* Solid color on hover */
+}
+
+footer {
+    background-color: #2b2b36;
+    color: #2ecb62;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #000000;
+    font-size: 2.5rem; /* 폰트 크기 증가 */
+    text-align: center;
+    text-shadow: 3px 3px 5px rgb(255, 255, 255); /* 텍스트에 그림자 효과 추가 */
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+
+
+

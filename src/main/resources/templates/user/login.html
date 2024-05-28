@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>메인화면</title>
+    <link rel="stylesheet" href="/css/login.css"/>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+
+            $("#btnUserReg").on("click", function () {
+                location.href = "/user/userRegForm";
+            });
+
+            $("#btnMain").on("click", function () {
+                location.href = "/html/index.html";
+            });
+
+            $("#btnLogin").on("click", function () {
+                let f = document.getElementById("f");
+
+                if (f.userId.value === "") {
+                    alert("아이디를 입력하세요.");
+                    f.userId.focus();
+                    return;
+                }
+
+                if (f.password.value === "") {
+                    alert("비밀번호를 입력하세요.");
+                    f.password.focus();
+                    return;
+                }
+
+                $.ajax({
+                    url: "/user/loginProc",
+                    type: "post",
+                    dataType: "JSON",
+                    data: $("#f").serialize(),
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+                            location.href = "/html/index.html";
+                        } else {
+                            alert(json.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+<form id="f" class="login-form" >
+<div class="login-page">
+    <div class="form">
+        <h2 class="header-title">로그인하기</h2>
+
+            <input type="text" name="userId" id="userId" placeholder="아이디"/>
+            <input type="password" name="password" id="password"  placeholder="비밀번호"/>
+            <button id ="btnLogin" type="button">로그인</button>
+
+            <p class="message"> 회원이 아니신가요? <a href="userRegForm">회원가입 </a></p>
+            <p class="message"> 아이디찾기 <a href="SearchUserId"> 아이디 찾기</a></p>
+            <p class="message"> 비밀번호찾기 <a href="newPassword"> 비밀번호 찾기</a></p>
+
+
+    </div>
+</div>
+</form>
+</body>
+
+</html>
