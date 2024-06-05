@@ -23,16 +23,24 @@ public class NoticeJoinController {
     private final INoticeJoinService noticeJoinService;
 
     @GetMapping(value = "noticeListUsingJoinColumn")
-    public String noticeListUsingJoinColumn(HttpSession session, ModelMap model) throws Exception {
-        log.info(this.getClass().getName() + ".noticeList Start!");
+    public String noticeListUsingJoinColumn(HttpSession session, ModelMap model)
+            throws Exception {
 
+        log.info(this.getClass().getName() + ".noticeListUsingJoinColumn Start!");
+
+        /**
+         *
+         * USER_INFO 테이블에 아이디 정보가 없으니까 임시로 "USER01" 세팅
+         *
+         */
         session.setAttribute("SESSION_USER_ID", "USER01");
 
-        List<NoticeDTO> rList = Optional.ofNullable(noticeJoinService.getNoticeListUsingJoinColumn()).orElseGet(ArrayList::new);
+        List<NoticeDTO> rList = Optional.ofNullable(noticeJoinService.getNoticeListUsingJoinColumn())
+                .orElseGet(ArrayList::new);
 
         model.addAttribute("rList", rList);
 
-        log.info(this.getClass().getName() + ".noticeList End!");
+        log.info(this.getClass().getName() + ".noticeListUsingJoinColumn End!");
 
         return "notice/noticeListJoin";
     }
@@ -41,35 +49,21 @@ public class NoticeJoinController {
     public String noticeListUsingNativeQuery(HttpSession session, ModelMap model)
             throws Exception {
 
-        log.info(this.getClass().getName()+ ".noticeListUsingNativeQuery Start!");
+        log.info(this.getClass().getName() + ".noticeListUsingNativeQuery Start!");
 
-        session.setAttribute("SESSION_USER_ID" , "USER01");
+        /**
+         *
+         * USER_INFO 테이블에 아이디 정보가 없으니까 임시로 "USER01" 세팅
+         *
+         */
+        session.setAttribute("SESSION_USER_ID", "USER01");
 
         List<NoticeDTO> rList = Optional.ofNullable(noticeJoinService.getNoticeListUsingNativeQuery())
                 .orElseGet(ArrayList::new);
 
         model.addAttribute("rList", rList);
 
-        log.info(this.getClass().getName() + ".noticeList End!");
-
-        return "notice/noticeListJoin";
-
-    }
-
-    @GetMapping(value = "noticeListUsingJPQL")
-    public String noticeListUsingJPQL(HttpSession session, ModelMap model)
-            throws Exception {
-
-        log.info(this.getClass().getName() + ".noticeListUSINGJPQL START");
-
-        session.setAttribute("SESSION_USER_ID" , "USER01");
-
-        List<NoticeDTO> rList = Optional.ofNullable(noticeJoinService.getNoticeListUsingJPQL())
-                .orElseGet(ArrayList::new);
-
-        model.addAttribute("rList",rList);
-
-        log.info(this.getClass().getName() + ".noticelistusingJPQL end!");
+        log.info(this.getClass().getName() + ".noticeListUsingNativeQuery End!");
 
         return "notice/noticeListJoin";
     }

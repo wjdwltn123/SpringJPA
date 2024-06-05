@@ -8,8 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <link rel="icon" href="/assets/img/logo.png" type="image/x-icon">
+    <script src="/js/noticeInfo.js"></script>
     <link rel="shortcut icon" href="/assets/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/css/comment.css">
 
     <style>
         @font-face {
@@ -93,13 +96,17 @@
 
     </style>
     <link rel="stylesheet" type="text/css" href="/css/noticeInfo.css"/>
+
+
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script th:inline="javascript">
-        /*<![CDATA[*/
-        const ss_user_id = [[${session.SS_USER_ID}]];
-        const user_id = [[${rDTO.userId}]];
-        const nSeq = [[${rDTO.noticeSeq}]];
+
+
+        const session_user_id = [[${session.SS_USER_ID}]]; // Controller에서 받은 세션에 저장된 값
+        const user_id = [[${rDTO.userId}]]; // 공지사항 게시글 작성자 아이디
+        const nSeq = [[${rDTO.noticeSeq}]]; // 현재 글번호, 자바에서 받을 변수들은 자바스크립트 변수로 저장하면 편함
+
 
         $(document).ready(function () {
             $("#btnEdit").on("click", function () {
@@ -113,20 +120,68 @@
             $("#btnList").on("click", function () {
                 location.href = "/notice/noticeList";
             });
+
+            $("#btnCommentDelete").on("click", function () {
+                doDel();
+            })
         });
 
         function doEdit() {
-            if (ss_user_id === user_id) {
+            if (session_user_id === user_id) {
                 location.href = "/notice/noticeEditInfo?nSeq=" + nSeq;
-            } else if (ss_user_id === " ") {
+            } else if (session_user_id === " ") {
                 alert("로그인 하시길 바랍니다.");
             } else {
                 alert("본인이 작성한 글만 수정 가능합니다.");
             }
         }
 
+        //삭제하기
+        function doDel(f) {
+
+            // 게시글 번호
+            let noticeSeq = nSeq;
+
+            // commentSeq(f)에 따른 div값들 조회
+            let commentBox = document.getElementById('comment' + f);
+
+            // commentBox 내부에서 name이 "cUserId"인 요소 선택 및 값 가져오기
+            let cUserId = commentBox.querySelector('.comment-name[name="cUserId"]').innerText;
+
+
+            console.log("cUserId : " + cUserId)
+            console.log("commentSeq : " + f)
+            console.log("noticeSeq : " + nSeq)
+
+            if (session_user_id === cUserId) {
+                if (confirm("작성한 댓글을 삭제하시겠습니까?")) {
+
+                    // Ajax 호출해서 글 삭제하기
+                    $.ajax({
+                            url: "/notice/commentDelete",
+                            type: "post", // 전송방식은 Post
+                            dataType: "JSON", // 전송 결과는 JSON으로 받기
+                            data: {"commentSeq": f,
+                                "noticeSeq": noticeSeq }, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                            success:
+                                function (json) { // /comment/commentDelete 호출이 성공했다면..
+                                    alert(json.msg); // 메시지 띄우기
+                                    location.reload(); // 화면 새로고침
+                                }
+                        }
+                    )
+                }
+
+            } else if (session_user_id === "") {
+                alert("로그인 하시길 바랍니다.");
+
+            } else {
+                alert("본인이 작성한 댓글만 수정 가능합니다.");
+            }
+        }
+
         function doDelete() {
-            if (ss_user_id === user_id) {
+            if (session_user_id === user_id) {
                 if (confirm("작성한 글을 삭제하시겠습니까?")) {
                     $.ajax({
                         url: "/notice/noticeDelete",
@@ -145,11 +200,10 @@
                 alert("본인이 작성한 글만 삭제 가능합니다.");
             }
         }
-
         function sendCommentSeq(element) {
             var commentSeq = element.getAttribute('data-comment-seq');
             var userId = element.getAttribute('data-user-id');
-            if (ss_user_id === userId) {
+            if (session_user_id === userId) {
                 if (confirm("작성한 댓글을 삭제하시겠습니까?")) {
                     $.ajax({
                         url: "/notice/deleteComment",
@@ -165,7 +219,7 @@
                         }
                     });
                 }
-            } else if (ss_user_id === "") {
+            } else if (session_user_id === "") {
                 alert("로그인 하시길 바랍니다.");
             } else {
                 alert("본인이 작성한 글만 삭제 가능합니다.");
@@ -173,6 +227,8 @@
         }
 
         /*]]>*/
+
+
     </script>
 
     <script type="text/javascript">
@@ -185,12 +241,12 @@
         function doSubmit() {
 
             let f = document.getElementById("f");
-
-            if (f.contents.value === "") {
-                alert("내용을 입력하시기 바랍니다.");
-                f.contents.focus();
-                return;
-            }
+            //
+            // if (f.contents.value === "") {
+            //     alert("내용을 입력하시기 바랍니다.");
+            //     f.contents.focus();
+            //     return;
+            // }
 
             $.ajax({
                     url: "/notice/commentInsert",
@@ -235,44 +291,50 @@
         </div>
         <hr>
         <div class="card my-4" style="box-shadow: none; margin-top: -0.7rem!important;">
-            <form name="f" id="f">
+
                 <div class="card-body">
 
+
                     <!-- 댓글 목록 -->
-                    <div id="comments">
+
+                    <div  id="comments">
                         <div th:each="dto : ${rList}" class="mt-4" style="margin-top: 0.1rem!important">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h5 th:text="${dto.userName}">작성자 이름</h5>
-                                    <p style="white-space: pre" th:text="${dto.contents}">댓글 내용</p>
+                                    <h5 th:text="${dto.userId}">작성자 이름</h5>
+                                    <p style="white-space: pre" th:text="${dto.commentContents}">댓글 내용</p>
                                 </div>
+                                <span><p th:text="${dto.commentRegDt}">작성 시간 </span>
 
-                                <span><p th:text="${dto.regDt}">작성 시간 </span>
                                 <i class="fa-solid fa-square-xmark"
                                    style="color: #858585; cursor: pointer"
                                    th:data-comment-seq="${dto.commentSeq}"
                                    th:data-user-id="${dto.userId}"
-                                   onclick="sendCommentSeq(this)"></i>
+                                   onclick="doDel(this)"></i>
                             </div>
                             <hr>
                         </div>
                     </div>
 
 
+                    <form name="f" id="f">
                     <div class="form-group" style="margin-top: -25px">
-                        <label for="contents"></label>
-                        <textarea class="form-control" name="contents" id="contents" rows="3" placeholder="댓글을 입력하세요."
+                        <label for="content"></label>
+                        <textarea class="form-control" name="content" id="content" rows="3" placeholder="댓글을 입력하세요."
                                   required></textarea>
                     </div>
-                    <input type="hidden" name="nSeq" th:value="${rDTO.noticeSeq}"/>
-
+                        <input type="hidden" name="noticeSeq" th:value="${rDTO.noticeSeq}"/>
+                    </form>
                 </div>
-            </form>
+
+
+
             <div class="card-footer text-right" style="border-top: none; margin-top: -2rem; margin-bottom: -1.2rem;">
                 <button id="btnEdit" type="button" class="btn btn-primary">수정</button>
                 <button id="btnDelete" type="button" class="btn btn-danger">삭제</button>
                 <button id="btnSend" type="button" class="btn btn-warning">댓글 작성
                 </button>
+
                 <button id="btnList" type="button" class="btn btn-secondary">목록</button>
             </div>
         </div>

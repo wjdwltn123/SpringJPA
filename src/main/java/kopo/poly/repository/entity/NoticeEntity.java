@@ -13,11 +13,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Builder
 @Entity
-public class NoticeEntity {
+public class    NoticeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "notice_seq")
     private Long noticeSeq;
 
@@ -25,11 +24,7 @@ public class NoticeEntity {
     @Column(name = "title", length = 500, nullable = false)
     private String title;
 
-
-    @Column(name = "notice_yn", length = 1, nullable = false)
-    private String noticeYn;
-
-
+    
     @Column(name = "contents", nullable = false)
     private String contents;
 

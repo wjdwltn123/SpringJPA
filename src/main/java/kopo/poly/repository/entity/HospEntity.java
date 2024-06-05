@@ -21,23 +21,23 @@ public class HospEntity {
     private Long id;
 
     //사업장명 BIZPLC_NM
-    @Column(name = "bizplc_nm")
+    @Column(name = "BIZPLC_NM")
     private String bizplcNm;
 
     //영업상태명 BSN_STATE_NM
-    @Column(name = "bsn_state_nm")
+    @Column(name = "BSN_STATE_NM")
     private String bsnStateNm;
 
     //병상수(개) SICKBD_CNT
-    @Column(name = "sickbd_cnt")
-    private Integer sickbdCnt;
+    @Column(name = "SICKBD_CNT")
+    private String sickbdCnt;
 
     //진료과목내용 TREAT_SBJECT_CONT
-    @Column(name = "treat_sbject_cont")
+    @Column(name = "TREAT_SBJECT_CONT")
     private String treatSbjectCont;
 
     //소재지번주소 REFINE_LOTNO_ADDR
-    @Column(name = "refine_lotno_addr")
+    @Column(name = "REFINE_LOTNO_ADDR")
     private String refineLotnoAddr;
 
     // 생성자, getter 및 setter 메서드 생략

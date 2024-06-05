@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/profile.css"/>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <link href="/css/profile.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/js/withdrawal.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<section id="userProfileWrapper">
+    <section id="userProfileContainer">
+        <section id="userProfileHeader">
+            <h1 th:text="${session.SS_USER_ID}"></h1>
+            <ul class="right">
+                <li><a href="/html/index.html">메인페이지</a></li>
+                <li><a href="#">고객센터</a></li>
+                <li><a href="/notice/noticeList">게시판</a></li>
+            </ul>
+            <img src="/assets/img/profile.png">
+        </section>
+        <section class="modifyBlock"></section>
+        <section id="userProfileContent">
+            <div class="upiContainer-Full">
+                <section class="upiBlock">
+                    회원탈퇴 시 모든 정보는 삭제되고 복구가 불가능합니다.
+                    <br>
+                    이에 동의하시면 "<span class="blue-text">탈퇴합니다.</span>" 를 입력해주세요.
+                    <hr>
+                    <form name="f" id="f">
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">입력문</h6>
+                            </div>
+                            <br>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" name="agree" id="agree" placeholder="탈퇴합니다.">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="px-4 my-4">
+                            <button id="btnWithdrawal" class="flex items-left justify-between w-1/10 px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple actionButton" type="button">
+                                <div class="w-full">
+                                    <span class="px-3 py-2 text-sm font-semibold">회원 탈퇴</span>
+                                    <span class="ml-2" aria-hidden="true">*</span>
+                                </div>
+                            </button>
+                            <button id="btnBack" class="flex items-left justify-between w-1/10 px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple actionButton" type="button" style="margin-left: 10px;">
+                                <div class="w-full">
+                                    <span class="px-3 py-2 text-sm font-semibold">돌아가기</span>
+                                    <span class="ml-2" aria-hidden="true"><</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="upiContainer-Full">
+                <section class="upiBlock">
+                    <a href="/user/withdrawal"><h3>회원탈퇴 </h3></a>
+                    <div class="upiItem"><a href="/user/withdrawal">회원탈퇴 이동 <<< </a><p>회원탈퇴를 원하시면 상단의 글자를 클릭하세요!</p></div>
+                </section>
+            </div>
+        </section>
+    </section>
+</section>
+
+</body>
+</html>

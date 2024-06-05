@@ -4,25 +4,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/profile.css"/>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <link href="/css/profile.css" rel="stylesheet" />
     <script type="text/javascript">
     <script src="/js/profile.js"></script>
-
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            position: relative;
-        }
-
-        .modifyBlock {
-            position: absolute;
-            right: 0;
-            top: 0;
-            color: #FFFFFF; /* 글씨체를 하얀색으로 설정 */
-            font-weight: bold; /* 글씨체를 볼드체로 설정 */
-        }
-    </style>
-
 
 </head>
 <body>
@@ -31,12 +15,13 @@
     <section id="userProfileContainer">
         <section id="userProfileHeader">
 
+
             <h1 th:text="${session.SS_USER_ID}" > </h1> <!-- 세션에서 사용자 이름을 가져와 표시 -->
 
             <ul class="right">
                 <li><a href="/html/index.html">메인페이지</a></li>
                 <li><a href="#">고객센터</a></li>
-                <li><a href="/user/profile">마이페이지</a></li>
+                <li><a href="/notice/noticeList">게시판</a></li>
             </ul>
 
             <img src="/assets/img/profile.png">
@@ -47,22 +32,30 @@
         <section id="userProfileContent">
             <div class="upiContainer-Full">
                 <section class="upiBlock">
-                    <h3>프로필</h3>
-                    <div class="upiItem"><span class="upiTitle">이메일: </span> jungjisu0809@gmail.com </div>
-                    <div class="upiItem"><span class="upiTitle">주소</span> 서울특별시 동작구 상도로11길 23-1</div>
-                    <div class="upiItem"><span class="upiTitle">상세주소</span>다울네버빌 b 동</div>
+
+                    <h3>이름: <span class="col-sm-9 text-secondary" id="UserName" th:text="${rDTO.userName}"></span></h3>
+                    <h3>이메일: <span class="col-sm-9 text-secondary __cf_email__" id="myEmail" th:text="${rDTO.email}"></span></h3>
+                    <h3>주소: <span class="col-sm-9 text-secondary" th:text="${rDTO.addr1}"></span></h3>
+                    <h3>상세주소: <span class="col-sm-9 text-secondary" th:text="${rDTO.addr2}"></span></h3>
+
+
                 </section>
             </div>
 
             <div class="upiContainer-Full">
                 <section class="upiBlock">
-                    <a href="/user/changeUserName"><h3>이름 수정</h3> </a>
-                    <div class="upiItem"><a href="/user/changeUserName">이름 수정하러 가기 <<< </a><p>프로필 수정을 원하시면 상단의 글자를 클릭하세요!</p></div>
+                    <a href="/user/profileEdit"><h3>회원 정보 수정</h3> </a>
+                    <div class="upiItem"><a href="/user/profileEdit">정보수정 이동 <<< </a><p>회원정보 수정을 원하시면 상단의 글자를 클릭하세요!</p></div>
                 </section>
             </div>
 
 
-
+            <div class="upiContainer-Full">
+                <section class="upiBlock">
+                    <a href="/user/withdrawal"><h3>회원탈퇴 </h3> </a>
+                    <div class="upiItem"><a href="/user/withdrawal">회원탈퇴 이동 <<< </a><p>회원탈퇴를 원하시면 상단의 글자를 클릭하세요!</p></div>
+                </section>
+            </div>
 
         </section>
     </section>

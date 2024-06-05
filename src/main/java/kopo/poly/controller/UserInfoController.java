@@ -233,14 +233,32 @@ public class UserInfoController {
     @GetMapping(value = "/profile")                    // 개인정보 수정 페이지
     public String profile(HttpSession session ,ModelMap model) throws Exception {
 
-        log.info(this.getClass().getName() + ".profile 함수 실행");
+        log.info(this.getClass().getName() + ".user/profile Start!");
 
         String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+        log.info("userId : " + userId);
 
 
-        model.addAttribute("userId", userId);
+        if (userId.length() > 0) {
 
-        return "user/profile";
+            UserInfoDTO pDTO = UserInfoDTO.builder()
+                    .userId(userId)
+                    .build();
+
+            UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserInfo(pDTO))
+                    .orElseGet(() -> UserInfoDTO.builder().build());
+
+            model.addAttribute("rDTO", rDTO);
+
+        } else {
+
+            return "/user/login";
+
+        }
+
+        log.info(this.getClass().getName() + ".user/profile End!");
+
+        return  "user/profile";
 
     }
 
@@ -404,6 +422,169 @@ public class UserInfoController {
         log.info("dto : " + dto);
         return dto;
     }
+
+
+    /**
+     *
+     * ##################################################################################
+     *
+     *                                      MyPage
+     *
+     * ##################################################################################
+     */
+
+
+    // 유저 정보 수정 페이지 이동
+      @GetMapping(value = "profileEdit")
+        public String myPageEdit(HttpSession session, ModelMap model) throws Exception {
+
+            log.info(this.getClass().getName() + ".user/profileEdit Start!");
+
+            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+            log.info("userId : " + userId);
+
+
+            if (userId.length() > 0) {
+
+                UserInfoDTO pDTO = UserInfoDTO.builder()
+                        .userId(userId)
+                        .build();
+
+                UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserInfo(pDTO))
+                        .orElseGet(() -> UserInfoDTO.builder().build());
+
+                model.addAttribute("rDTO", rDTO);
+
+            } else {
+
+                return "/user/login";
+
+            }
+
+            log.info(this.getClass().getName() + ".user/profileEdit End!");
+
+            return  "user/profileEdit";
+
+        }
+
+       // 유저 정보 수정
+        @ResponseBody
+        @PostMapping(value = "updateUserInfo")
+        public MsgDTO userInfoUpdate(HttpServletRequest request, HttpSession session) throws Exception {
+
+            log.info(this.getClass().getName() + ".updateUserInfo Start!");
+
+            String msg;
+
+            String userId = CmmUtil.nvl((String)session.getAttribute("SS_USER_ID"));
+            String userName = CmmUtil.nvl(request.getParameter("userName"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+            String addr1 = CmmUtil.nvl(request.getParameter("addr1"));
+            String addr2 = CmmUtil.nvl(request.getParameter("addr2"));
+
+            log.info("userId : " + userId);
+            log.info("userName : " + userName);
+            log.info("email : " + (email));
+            log.info("addr1 : " + addr1);
+            log.info("addr2 : " + addr2);
+
+            UserInfoDTO pDTO = UserInfoDTO.builder()
+                    .userId(userId)
+                    .userName(userName)
+                    .email(email)
+                    .addr1(addr1)
+                    .addr2(addr2)
+                    .build();
+
+            int res = userInfoService.updateUserInfo(pDTO);
+
+            log.info("호윈 정보 수정 결과(res) : " + res);
+
+            if (res == 1) {
+                msg = "회원 정보 수정되었습니다..";
+
+            } else {
+
+                msg = "오류로 인해 회원 정보 수정에 실패했습니다.";
+
+            }
+
+            MsgDTO dto = MsgDTO.builder().result(res).msg(msg).build();
+
+            log.info(this.getClass().getName() + ".updateUserInfo End!");
+
+            return dto;
+        }
+
+
+      // 회원 탈퇴 페이지
+        @GetMapping(value = "withdrawal")
+        public String deleteUserInfo(HttpSession session) {
+
+            log.info(this.getClass().getName() + ".user/withdrawal Start!");
+
+            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+
+            if(userId.length()>0){
+
+            } else {
+                return "user/login";
+            }
+
+            log.info(this.getClass().getName() + ".user/withdrawal End!");
+
+            return "user/withdrawal";
+        }
+
+
+        /**
+         * 유저 정보 삭제
+         */
+
+        @ResponseBody
+        @PostMapping(value = "deleteUserInfo")
+        public MsgDTO noticeDelete(HttpSession session) {
+
+            log.info(this.getClass().getName() + ".deleteUserInfo Start!");
+
+            String msg = ""; // 메시지 내용
+            MsgDTO dto = null; // 결과 메시지 구조
+
+            try {
+                String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID")); // 글번호(PK)
+
+                log.info("userId : " + userId);
+
+                /*
+                 * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
+                 */
+                UserInfoDTO pDTO = UserInfoDTO.builder()
+                        .userId(userId)
+                        .build();
+
+                // 게시글 삭제하기 DB
+                userInfoService.deleteUserInfo(pDTO);
+
+                session.invalidate();
+
+                msg = "탈퇴하였습니다.";
+
+            } catch (Exception e) {
+                msg = "실패하였습니다. : " + e.getMessage();
+                log.info(e.toString());
+                e.printStackTrace();
+
+            } finally {
+
+                // 결과 메시지 전달하기
+                dto = MsgDTO.builder().msg(msg).build();
+
+                log.info(this.getClass().getName() + ".deleteUserInfo End!");
+
+            }
+
+            return dto;
+        }
 
 
 

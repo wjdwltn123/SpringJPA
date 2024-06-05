@@ -388,5 +388,19 @@ h2 {
     transition: all 0.3s ease-in-out;
 }
 
+body, html {
+    height: 100%;
+    margin: 0;
+    position: relative;
+}
+
+.modifyBlock {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #FFFFFF; /* 글씨체를 하얀색으로 설정 */
+    font-weight: bold; /* 글씨체를 볼드체로 설정 */
+}
+
 
 

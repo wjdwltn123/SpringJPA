@@ -2,10 +2,10 @@ package kopo.poly.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kopo.poly.dto.NoticeDTO;
 import kopo.poly.repository.NoticeRepository;
 import kopo.poly.repository.entity.NoticeEntity;
+import kopo.poly.repository.entity.UserInfoEntity;
 import kopo.poly.service.INoticeService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.DateUtil;
@@ -68,7 +68,6 @@ public class NoticeService implements INoticeService {
 
         return rDTO;
     }
-
     @Transactional
     @Override
     public void updateNoticeInfo(NoticeDTO pDTO) {
@@ -80,13 +79,11 @@ public class NoticeService implements INoticeService {
         String title = CmmUtil.nvl(pDTO.title());
         String contents = CmmUtil.nvl(pDTO.contents());
         String userId = CmmUtil.nvl(pDTO.userId());
-        String noticeYn = CmmUtil.nvl(pDTO.noticeYn());
 
         log.info("noticeSeq : " + noticeSeq);
         log.info("title : " + title);
         log.info("contents : " + contents);
         log.info("userId : " + userId);
-        log.info("noticeYn : " + noticeYn);
 
         // 현재 공지사항 조회수 가져오기
         NoticeEntity rEntity = noticeRepository.findByNoticeSeq(noticeSeq);
@@ -97,7 +94,6 @@ public class NoticeService implements INoticeService {
                 .title(title)
                 .contents(contents)
                 .userId(userId)
-                .noticeYn(noticeYn)
                 .readCnt(rEntity.getReadCnt())
                 .chgId(userId)
                 .chgDt(DateUtil.getDateTime("yyyy-MM-dd hh:mm:ss"))
@@ -122,7 +118,6 @@ public class NoticeService implements INoticeService {
         // 데이터 수정하기
         noticeRepository.deleteById(noticeSeq);
 
-
         log.info(this.getClass().getName() + ".deleteNoticeInfo End!");
     }
 
@@ -132,19 +127,18 @@ public class NoticeService implements INoticeService {
         log.info(this.getClass().getName() + ".InsertNoticeInfo Start!");
 
         String title = CmmUtil.nvl(pDTO.title());
-        String noticeYn = CmmUtil.nvl(pDTO.noticeYn());
         String contents = CmmUtil.nvl(pDTO.contents());
         String userId = CmmUtil.nvl(pDTO.userId());
 
         log.info("title : " + title);
-        log.info("noticeYn : " + noticeYn);
         log.info("contents : " + contents);
         log.info("userId : " + userId);
+
 
         // 공지사항 저장을 위해서는 PK 값은 빌더에 추가하지 않는다.
         // JPA에 자동 증가 설정을 해놨음
         NoticeEntity pEntity = NoticeEntity.builder()
-                .title(title).noticeYn(noticeYn).contents(contents).userId(userId).readCnt(0L)
+                .title(title).contents(contents).userId(userId).readCnt(0L)
                 .regId(userId).regDt(DateUtil.getDateTime("yyyy-MM-dd hh:mm:ss"))
                 .chgId(userId).chgDt(DateUtil.getDateTime("yyyy-MM-dd hh:mm:ss"))
                 .build();
@@ -155,6 +149,4 @@ public class NoticeService implements INoticeService {
         log.info(this.getClass().getName() + ".InsertNoticeInfo End!");
 
     }
-
-
 }

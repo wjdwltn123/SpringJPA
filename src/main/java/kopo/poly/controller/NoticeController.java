@@ -2,8 +2,10 @@ package kopo.poly.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kopo.poly.dto.CommentDTO;
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.NoticeDTO;
+import kopo.poly.service.ICommentService;
 import kopo.poly.service.INoticeService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class NoticeController {
 
     // @RequiredArgsConstructor 를 통해 메모리에 올라간 서비스 객체를 Controller에서 사용할 수 있게 주입함
     private final INoticeService noticeService;
+    private final ICommentService commentService;
 
     /**
      * 게시판 리스트 보여주기
@@ -48,11 +51,6 @@ public class NoticeController {
 
         // 로그 찍기(추후 찍은 로그를 통해 이 함수에 접근했는지 파악하기 용이하다.)
         log.info(this.getClass().getName() + ".noticeList Start!");
-
-        // 로그인된 사용자 아이디는 Session에 저장함
-        // 교육용으로 아직 로그인을 구현하지 않았기 때문에 Session에 데이터를 저장하지 않았음
-        // 추후 로그인을 구현할 것으로 가정하고, 공지사항 리스트 출력하는 함수에서 로그인 한 것처럼 Session 값을 생성함
-        session.setAttribute("SESSION_USER_ID", "USER01");
 
         // 공지사항 리스트 조회하기
         // Java 8부터 제공되는 Optional 활용하여 NPE(Null Pointer Exception) 처리
@@ -109,9 +107,8 @@ public class NoticeController {
         try {
             // 로그인된 사용자 아이디를 가져오기
             // 로그인을 아직 구현하지 않았기에 공지사항 리스트에서 로그인 한 것처럼 Session 값을 저장함
-            String userId = CmmUtil.nvl((String) session.getAttribute("SESSION_USER_ID"));
+            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
             String title = CmmUtil.nvl(request.getParameter("title")); // 제목
-            String noticeYn = CmmUtil.nvl(request.getParameter("noticeYn")); // 공지글 여부
             String contents = CmmUtil.nvl(request.getParameter("contents")); // 내용
 
             /*
@@ -119,14 +116,13 @@ public class NoticeController {
              * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
              * ####################################################################################
              */
-            log.info("session user_id : " + userId);
+            log.info("ss_user_id : " + userId);
             log.info("title : " + title);
-            log.info("noticeYn : " + noticeYn);
             log.info("contents : " + contents);
 
             // 데이터 저장하기 위해 DTO에 저장하기
             NoticeDTO pDTO = NoticeDTO.builder().userId(userId).title(title)
-                    .noticeYn(noticeYn).contents(contents).build();
+                    .contents(contents).build();
 
             /*
              * 게시글 등록하기위한 비즈니스 로직을 호출
@@ -173,15 +169,27 @@ public class NoticeController {
         /*
          * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
          */
-        NoticeDTO pDTO = NoticeDTO.builder().noticeSeq(Long.parseLong(nSeq)).build();
+        NoticeDTO pDTO = NoticeDTO.builder()
+                .noticeSeq(Long.parseLong(nSeq))
+                .build();
+
+        CommentDTO cDTO = CommentDTO.builder()
+                .noticeSeq(Long.parseLong(nSeq))
+                .build();
 
         // 공지사항 상세정보 가져오기
         // Java 8부터 제공되는 Optional 활용하여 NPE(Null Pointer Exception) 처리
         NoticeDTO rDTO = Optional.ofNullable(noticeService.getNoticeInfo(pDTO, true))
                 .orElseGet(() -> NoticeDTO.builder().build());
 
+        List<CommentDTO> rList = Optional.ofNullable(commentService.getCommentList(cDTO))
+                .orElseGet(() -> new ArrayList<>());
+
+        log.info("rDTO.noticeSeq : " + rDTO.noticeSeq());
+
         // 조회된 리스트 결과값 넣어주기
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("rList", rList);
 
 
         log.info(this.getClass().getName() + ".noticeInfo End!");
@@ -236,10 +244,9 @@ public class NoticeController {
         MsgDTO dto = null; // 결과 메시지 구조
 
         try {
-            String userId = CmmUtil.nvl((String) session.getAttribute("SESSION_USER_ID")); // 아이디
+            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID")); // 아이디
             String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호(PK)
             String title = CmmUtil.nvl(request.getParameter("title")); // 제목
-            String noticeYn = CmmUtil.nvl(request.getParameter("noticeYn")); // 공지글 여
             String contents = CmmUtil.nvl(request.getParameter("contents")); // 내용
 
             /*
@@ -250,14 +257,13 @@ public class NoticeController {
             log.info("userId : " + userId);
             log.info("nSeq : " + nSeq);
             log.info("title : " + title);
-            log.info("noticeYn : " + noticeYn);
             log.info("contents : " + contents);
 
             /*
              * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
              */
             NoticeDTO pDTO = NoticeDTO.builder().userId(userId).noticeSeq(Long.parseLong(nSeq))
-                    .title(title).noticeYn(noticeYn).contents(contents).build();
+                    .title(title).contents(contents).build();
 
             // 게시글 수정하기 DB
             noticeService.updateNoticeInfo(pDTO);
@@ -286,7 +292,7 @@ public class NoticeController {
      */
     @ResponseBody
     @PostMapping(value = "noticeDelete")
-    public MsgDTO noticeDelete(HttpSession session, HttpServletRequest request) {
+    public MsgDTO noticeDelete(HttpServletRequest request) {
 
         log.info(this.getClass().getName() + ".noticeDelete Start!");
 
@@ -294,7 +300,6 @@ public class NoticeController {
         MsgDTO dto = null; // 결과 메시지 구조
 
         try {
-
             String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호(PK)
 
             /*
@@ -330,148 +335,5 @@ public class NoticeController {
 
         return dto;
     }
-//    @ResponseBody
-//    @PostMapping(value = "noticeDelete")
-//    public MsgDTO noticeDelete(HttpServletRequest request) {
-//
-//        log.info(this.getClass().getName() + ".noticeDelete Start!");
-//
-//        String msg = ""; // 메시지 내용
-//        MsgDTO dto = null; // 결과 메시지 구조
-//
-//        try {
-//            String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호(PK)
-//
-//            /*
-//             * ####################################################################################
-//             * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
-//             * ####################################################################################
-//             */
-//            log.info("nSeq : " + nSeq);
-//
-//            /*
-//             * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
-//             */
-//            NoticeDTO pDTO = new NoticeDTO();
-//            pDTO.setNoticeSeq(Long.parseLong(nSeq)); // String 타입을 long 타입으로 변경
-//
-//            // 게시글 삭제하기 DB
-//            noticeService.deleteNoticeInfo(pDTO);
-//
-//            msg = "삭제되었습니다.";
-//
-//        } catch (Exception e) {
-//            msg = "실패하였습니다. : " + e.getMessage();
-//            log.info(e.toString());
-//            e.printStackTrace();
-//
-//        } finally {
-//            // 결과 메시지 전달하기
-//            dto = new MsgDTO();
-//            dto.setMsg(msg);
-//
-//            log.info(this.getClass().getName() + ".noticeDelete End!");
-//
-//        }
-//
-//        return dto;
-//    }
-//
-//    @ResponseBody
-//    @PostMapping(value = "deleteComment")
-//    public MsgDTO deleteComment(HttpServletRequest request) {
-//
-//        log.info(this.getClass().getName() + ".deleteComment Start!");
-//
-//        String msg = ""; // 메시지 내용
-//        MsgDTO dto = null; // 결과 메시지 구조
-//
-//        try {
-//            String commentSeq = CmmUtil.nvl(request.getParameter("commentSeq"));
-//
-//            log.info("commentSeq : " + commentSeq);
-//
-//            CommentDTO pDTO = new CommentDTO();
-//            pDTO.setCommentSeq(Long.parseLong(commentSeq));
-//
-//            noticeService.deleteComment(pDTO);
-//
-//            msg = "삭제되었습니다.";
-//
-//        } catch (Exception e) {
-//            msg = "실패하였습니다. : " + e.getMessage();
-//            log.info(e.toString());
-//            e.printStackTrace();
-//
-//        } finally {
-//            // 결과 메시지 전달하기
-//            dto = new MsgDTO();
-//            dto.setMsg(msg);
-//
-//            log.info(this.getClass().getName() + ".deleteComment End!");
-//
-//        }
-//
-//        return dto;
-//    }
-//
-//
-//    @ResponseBody
-//    @PostMapping(value = "commentInsert")
-//    public MsgDTO commentInsert(HttpServletRequest request, HttpSession session) {
-//
-//        log.info(this.getClass().getName() + ".commentInsert Start!");
-//
-//        String msg = ""; // 메시지 내용
-//
-//        MsgDTO dto = null; // 결과 메시지 구조
-//
-//        try {
-//            // 로그인된 사용자 아이디를 가져오기
-//            // 로그인을 아직 구현하지 않았기에 공지사항 리스트에서 로그인 한 것처럼 Session 값을 저장함
-//            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
-//            String contents = CmmUtil.nvl(request.getParameter("contents")); // 내용
-//            String nSeq = CmmUtil.nvl(request.getParameter("nSeq")); // 글번호
-//
-//            /*
-//             * ####################################################################################
-//             * 반드시, 값을 받았으면, 꼭 로그를 찍어서 값이 제대로 들어오는지 파악해야함 반드시 작성할 것
-//             * ####################################################################################
-//             */
-//            log.info("session user_id : " + userId);
-//            log.info("contents : " + contents);
-//            log.info("nSeq : " + nSeq);
-//
-//            // 데이터 저장하기 위해 DTO에 저장하기
-//            CommentDTO pDTO = new CommentDTO();
-//            pDTO.setUserId(userId);
-//            pDTO.setContents(contents);
-//            pDTO.setNoticeSeq(Long.parseLong(nSeq));
-//
-//            /*
-//             * 게시글 등록하기위한 비즈니스 로직을 호출
-//             */
-//            noticeService.insertComment(pDTO);
-//
-//            // 저장이 완료되면 사용자에게 보여줄 메시지
-//            msg = "등록되었습니다.";
-//
-//        } catch (Exception e) {
-//
-//            // 저장이 실패되면 사용자에게 보여줄 메시지
-//            msg = "실패하였습니다. : " + e.getMessage();
-//            log.info(e.toString());
-//            e.printStackTrace();
-//
-//        } finally {
-//            // 결과 메시지 전달하기
-//            dto = new MsgDTO();
-//            dto.setMsg(msg);
-//
-//            log.info(this.getClass().getName() + ".commentInsert End!");
-//        }
-//
-//        return dto;
-//    }
 
 }

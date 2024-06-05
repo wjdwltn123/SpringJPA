@@ -27,10 +27,6 @@ public class NoticeJoinEntity {
     private String title;
 
 
-    @Column(name = "notice_yn", length = 1, nullable = false)
-    private String noticeYn;
-
-
     @Column(name = "contents", nullable = false)
     private String contents;
 

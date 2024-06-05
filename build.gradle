@@ -28,11 +28,18 @@ dependencies {
     implementation 'org.hibernate.orm:hibernate-jcache:6.4.4.Final'
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
     implementation 'org.ehcache:ehcache:3.10.0'
+    implementation 'org.json:json:20210307'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks.named('test') {

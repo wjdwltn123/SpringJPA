@@ -25,6 +25,54 @@ public class UserInfoService implements IUserInfoService {
     private final UserInfoRespository userInfoRespository;
 
     @Override
+    public UserInfoDTO getUserInfo(UserInfoDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getUserInfo Start!");
+
+        UserInfoDTO rDTO;
+
+        String userId = CmmUtil.nvl(pDTO.userId());
+
+        log.info("userId : " + userId);
+
+        Optional<UserInfoEntity> rEntity = userInfoRespository.findByUserId(userId);
+
+        if (rEntity.isPresent()) {
+
+            String userName = rEntity.get().getUserName();
+            String email = EncryptUtil.decAES128CBC(rEntity.get().getEmail());
+            String addr1 = rEntity.get().getAddr1();
+            String addr2 = rEntity.get().getAddr2();
+            String regDt = rEntity.get().getRegDt();
+
+            log.info("userId : " + userId);
+            log.info("userName : " + userName);
+            log.info("email : " + email);
+            log.info("addr1 : " + addr1);
+            log.info("addr2 : " + addr2);
+            log.info("regDt : " + regDt);
+
+            rDTO = UserInfoDTO.builder()
+                    .userId(userId)
+                    .userName(userName)
+                    .email(email)
+                    .addr1(addr1)
+                    .addr2(addr2)
+                    .regDt(regDt)
+                    .existsYn("Y")
+                    .build();
+
+        } else {
+
+            rDTO = UserInfoDTO.builder().existsYn("N").build();
+
+        }
+
+        log.info(this.getClass().getName() + ".getUserInfo End!");
+
+        return rDTO;
+    }
+
+    @Override
     public UserInfoDTO getUserIdExists(UserInfoDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getUserIdExists Start!");
@@ -145,7 +193,7 @@ public class UserInfoService implements IUserInfoService {
 
         log.info(this.getClass().getName() + ".newPasswordProc Start");
 
-        String res ="";
+        String res = "";
 
         // DTO로부터 userId와 암호화된 password 추출
         String userId = CmmUtil.nvl(pDTO.userId());
@@ -222,7 +270,7 @@ public class UserInfoService implements IUserInfoService {
 
         log.info(temp.get().getUserName());
 
-        Optional<UserInfoEntity> rEntity = userInfoRespository.findByUserIdAndEmail(pDTO.userId(),pDTO.email());
+        Optional<UserInfoEntity> rEntity = userInfoRespository.findByUserIdAndEmail(pDTO.userId(), pDTO.email());
 
         log.info("rEntity : " + rEntity);
 
@@ -238,5 +286,56 @@ public class UserInfoService implements IUserInfoService {
         return res;
     }
 
+    @Override
+    public int updateUserInfo(UserInfoDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateUserInfo Start!");
+
+        String userId = pDTO.userId();
+
+        int res = 0;
+
+        Optional<UserInfoEntity> rEntity = userInfoRespository.findByUserId(userId);
+
+        if (rEntity.isPresent()) {
+
+            String userName = pDTO.userName();
+            String email = EncryptUtil.encAES128CBC(pDTO.email());
+            String addr1 = pDTO.addr1();
+            String addr2 = pDTO.addr2();
+
+            log.info("userId : " + userId);
+            log.info("userName : " + userName);
+            log.info("email : " + email);
+            log.info("addr1 : " + addr1);
+            log.info("addr2 : " + addr2);
+
+            // 회원정보 DB에 저장
+            userInfoRespository.updateUserInfo(userId, email, userName, addr1, addr2);
+
+            res = 1;
+
+
+        }
+        log.info(this.getClass().getName() + ".updateUserInfo END!");
+        return res;
+    }
+
+    @Override
+    public void deleteUserInfo(UserInfoDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteUserInfo Start!");
+
+        String userId = pDTO.userId();
+
+        log.info("userId : " + userId);
+
+
+        // 데이터 수정하기
+        userInfoRespository.deleteById(userId);
+
+        log.info(this.getClass().getName() + ".deleteUserInfo End!");
+
+    }
+
 }
+
 

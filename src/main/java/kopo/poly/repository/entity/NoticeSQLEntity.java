@@ -26,9 +26,6 @@ public class NoticeSQLEntity {
     @Column(name = "title", length = 500, nullable = false)
     private String title;
 
-    @Column(name = "notice_yn", length = 1, nullable = false)
-    private String noticeYn;
-
 
     @Column(name = "contents", nullable = false)
     private String contents;
