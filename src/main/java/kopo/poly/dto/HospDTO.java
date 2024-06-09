@@ -8,19 +8,19 @@ import lombok.Builder;
 public record HospDTO(
 
 
-        //사업장명 BIZPLC_NM
-        String bizplcNm,
+        //사업장명
+        String bplcnm,
 
-        //영업상태명 BSN_STATE_NM
-        String bsnStateNm,
+        //도로명주소
+        String rdnwhladdr,
 
-        //병상수(개) SICKBD_CNT
-        Integer sickbdCnt,
+        //업태구분명
+        String uptaenm,
 
-        //진료과목내용 TREAT_SBJECT_CONT
-        String treatSbjectCont,
+        //전화번호
+        String sitetel,
 
-        //소재지번주소 REFINE_LOTNO_ADDR
-        String refineLotnoAddr
+        //영업상태명
+        String trdstatenm
 ) {
 }

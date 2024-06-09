@@ -94,10 +94,10 @@ public class CommentController {
      */
 
     @ResponseBody
-    @PostMapping(value = "commentDelete")
-    public MsgDTO commentDelete(HttpServletRequest request) {
+    @PostMapping(value = "deleteComment")
+    public MsgDTO deleteComment(HttpServletRequest request) {
 
-        log.info(this.getClass().getName() + ".commentDelete Start!");
+        log.info(this.getClass().getName() + ".deleteComment Start!");
 
         String msg = ""; // 메시지 내용
         MsgDTO dto = null; // 결과 메시지 구조
@@ -138,7 +138,7 @@ public class CommentController {
             // 결과 메시지 전달하기
             dto = MsgDTO.builder().msg(msg).build();
 
-            log.info(this.getClass().getName() + ".commentDelete End!");
+            log.info(this.getClass().getName() + ".deleteComment End!");
 
         }
 

@@ -1,81 +1,90 @@
 package kopo.poly.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kopo.poly.dto.HospDTO;
 import kopo.poly.service.IHospService;
+import kopo.poly.util.NetworkUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class HospService implements IHospService {
 
-    @Value("${Hosp.api.key}")
-    private String Hosp_Key;
+    @Value("${api.key}")
+    private String apiKey;
 
-    @Value("${Hosp.url}")
-    private String HospUrl;
+    private Map<String, String> setProductInfo() {
+        Map<String, String> requestHeader = new HashMap<>();
+        requestHeader.put("accept", "application/xml;charset=UTF-8");
+        requestHeader.put("Content-Type", "application/xml;charset=UTF-8");
+        requestHeader.put("apikey", apiKey);
 
-    private final RestTemplate restTemplate = new RestTemplate();
+        return requestHeader;
+    }
 
-    @Override
-    public List<HospDTO> getHospitalInfo(HospDTO pDTO) {
+    public HospDTO getProductApiList(String data) throws Exception {
+        log.info(this.getClass().getName() + ".getProductApiList Start!");
 
-        try {
-            log.info("HospService.getHospitalInfo() 호출");
+        String apiUrl = IHospService.apiUrl;
 
-            // API URL 설정
-            String url = HospUrl + "?serviceKey=" + Hosp_Key;
+        String apiParam = "?ServiceKey=" + apiKey + "&prdlstReportNo=" + data;
 
-            // URL 및 요청 헤더를 로그로 남김
-            log.info("API 요청 URL: {}", url);
+        log.info("apiParam : " + apiParam);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.ACCEPT, "application/json");
-            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+        String xml = NetworkUtil.get(apiUrl + apiParam, this.setProductInfo());
 
-            // HTTP 요청 엔티티 생성
-            HttpEntity<HospDTO> entity = new HttpEntity<>(pDTO, headers);
+        log.info("xml : " + xml);
 
-            // 요청 엔티티를 로그로 남김
-            log.info("HTTP 요청 엔티티: {}", entity);
+        // XML을 JSON으로 변환
+        JSONObject jsonObject = XML.toJSONObject(xml);
 
-            // API 호출 및 응답 받기
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+        // JSONObject를 문자열로 변환
+        String json = jsonObject.toString();
 
-            log.info("API 응답 상태: {}", response.getStatusCode());
-            log.info("API 응답 본문: {}", response.getBody());
+        log.info("json ; " + json);
 
-            // 응답에서 아이템 리스트 추출하여 DTO로 변환
-            List<Map<String, Object>> items = (List<Map<String, Object>>) response.getBody().get("items");
-            List<HospDTO> hospList2 = items.stream().map(item -> {
-                HospDTO hospDTO = HospDTO.builder()
-                        .bizplcNm((String) item.get("bizplcNm"))
-                        .bsnStateNm((String) item.get("bsnStateNm"))
-                        .sickbdCnt((Integer) item.get("sickbdCnt"))
-                        .treatSbjectCont((String) item.get("treatSbjectCont"))
-                        .refineLotnoAddr((String) item.get("refineLotnoAddr"))
-                        .build();
-                log.info("병원 정보 DTO: {}", hospDTO);
-                return hospDTO;
-            }).collect(Collectors.toList());
+        // ObjectMapper를 사용하여 JSON 문자열 파싱
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> tMap = objectMapper.readValue(json.getBytes("UTF-8"), LinkedHashMap.class);
 
-            log.info("HospService.getHospitalInfo() 완료");
-            return hospList2;
-        } catch (Exception e) {
-            log.error("HospService.getHospitalInfo() 오류 발생", e);
-            throw new RuntimeException("병원 정보를 가져오는 중 오류가 발생했습니다.", e);
-        }
+        log.info("tMap : " + tMap);
+
+        // body 안에 items가 있는지 확인
+        Map<String, Object> responseBody = (Map<String, Object>) ((Map<String, Object>) tMap.get("LOCALDATA_010101")).get("row");
+
+        //  병원정보 추출
+        String bplcnm = new String(((String) responseBody.get("bplcnm")));
+        String rdnwhladdr = new String(((String) responseBody.get("rdnwhladdr")));
+        String uptaenm = new String(((String) responseBody.get("uptaenm")));
+        String sitetel = new String(((String) responseBody.get("sitetel")));
+        String trdstatenm = new String(((String) responseBody.get("trdstatenm")));
+
+        log.info("bplcnm : " + bplcnm);
+        log.info("rdnwhladdr : " + rdnwhladdr);
+        log.info("uptaenm : " + uptaenm);
+        log.info("sitetel : " + sitetel);
+        log.info("trdstatenm : " + trdstatenm);
+
+        HospDTO rDTO = HospDTO.builder()
+                .bplcnm(bplcnm)
+                .rdnwhladdr(rdnwhladdr)
+                .uptaenm(uptaenm)
+                .sitetel(sitetel)
+                .trdstatenm(trdstatenm)
+                .build();
+
+        log.info(this.getClass().getName() + ".getProductApiList End!");
+
+        return rDTO;
     }
 }

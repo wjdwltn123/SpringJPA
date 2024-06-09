@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface IHospService {
 
-    List<HospDTO> getHospitalInfo(HospDTO pDTO);
-
     // API 호출을 위한 URL
-    String HospUrl = "https://openapi.gg.go.kr/RecuperationHospital?";
+    String apiUrl = "http://openapi.seoul.go.kr:8088/44486f5173776a6439306c43546443/xml/LOCALDATA_010101/1/5/";
+
+    HospDTO getProductApiList(String data) throws Exception;
 
 
 }

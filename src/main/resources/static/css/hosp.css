@@ -1,0 +1,56 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    margin: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left {
+    flex: 1;
+    background-color: #77bb77;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+.right {
+    flex: 2;
+    padding: 20px;
+}
+
+.result-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.result-box h4 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.allergy-box {
+    border: 1px solid red;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ffe6e6;
+    border-radius: 8px;
+}
+
+.allergy-box p {
+    margin: 0;
+    color: red;
+}

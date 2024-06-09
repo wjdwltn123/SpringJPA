@@ -144,20 +144,20 @@ function doDel(f) {
     // commentSeq(f)에 따른 div값들 조회
     let commentBox = document.getElementById('comment' + f);
 
-    // commentBox 내부에서 name이 "cUserId"인 요소 선택 및 값 가져오기
-    let cUserId = commentBox.querySelector('.comment-name[name="cUserId"]').innerText;
+    // commentBox 내부에서 name이 "userId"인 요소 선택 및 값 가져오기
+    let userId = commentBox.querySelector('.comment-name[name="userId"]').innerText;
 
 
-    console.log("cUserId : " + cUserId)
+    console.log("userId : " + userId)
     console.log("commentSeq : " + f)
     console.log("noticeSeq : " + nSeq)
 
-    if (session_user_id === cUserId) {
+    if (session_user_id === userId) {
         if (confirm("작성한 댓글을 삭제하시겠습니까?")) {
 
             // Ajax 호출해서 글 삭제하기
             $.ajax({
-                    url: "/notice/commentDelete",
+                    url: "/notice/commentDelete", // 엔드포인트 경로 수정
                     type: "post", // 전송방식은 Post
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
                     data: {"commentSeq": f,
@@ -212,8 +212,8 @@ function doCUpdate(commentSeq) {
     // commentSeq(f)에 따른 div값들 조회
     let commentBox = document.getElementById('comment' + commentSeq);
 
-    // commentBox 내부에서 name이 "cUserId"인 요소 선택 및 값 가져오기
-    let cUserId = commentBox.querySelector('.comment-name[name="cUserId"]').innerText;
+    // commentBox 내부에서 name이 "userId"인 요소 선택 및 값 가져오기
+    let userId = commentBox.querySelector('.comment-name[name="userId"]').innerText;
 
     let commentContentId = 'commentContent' + commentSeq;
     let commentContentElement = document.getElementById(commentContentId);
@@ -231,11 +231,11 @@ function doCUpdate(commentSeq) {
         return;
     }
 
-    console.log("cUserId : " + cUserId)
+    console.log("userId : " + userId)
     console.log("commentSeq : " + commentSeq)
     console.log("commentContents : " + commentContents)
 
-    if (session_user_id === cUserId) {
+    if (session_user_id === userId) {
         if (confirm("작성한 댓글을 수정하시겠습니까?")) {
 
             // Ajax 호출해서 글 삭제하기
