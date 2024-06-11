@@ -94,6 +94,7 @@ public class NoticeController {
      * 게시글 등록은 Ajax로 호출되기 때문에 결과는 JSON 구조로 전달해야만 함
      * JSON 구조로 결과 메시지를 전송하기 위해 @ResponseBody 어노테이션 추가함
      */
+
     @ResponseBody
     @PostMapping(value = "noticeInsert")
     public MsgDTO noticeInsert(HttpServletRequest request, HttpSession session) {

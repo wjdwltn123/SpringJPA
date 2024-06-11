@@ -21,6 +21,12 @@ public record HospDTO(
         String sitetel,
 
         //영업상태명
-        String trdstatenm
+        String trdstatenm,
+
+        // 병원 위치 x
+        double  x,
+
+        // 병원 위치 y
+        double  y
 ) {
 }

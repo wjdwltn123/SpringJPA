@@ -1,5 +1,6 @@
 package kopo.poly.controller;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kopo.poly.dto.HospDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.Arrays;
@@ -26,7 +28,6 @@ import java.util.Optional;
 public class HospController {
 
     private final IHospService hospService;
-    private final UserInfoService userInfoService;
 
     /**
      * Hosp 검색 화면으로 이동
@@ -45,26 +46,21 @@ public class HospController {
      * 병원 찾기 결과 화면으로 이동
      */
     @GetMapping(value = "searchHospResult")
-    public String searchAllergyResult(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception{
+    public String searchHospResult(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception{
 
-        log.info(this.getClass().getName() + ".searchAllergyResult Start!");
+        log.info(this.getClass().getName() + ".searchHospResult Start!");
 
         String data = CmmUtil.nvl(request.getParameter("data"));
 
-
         log.info("data : " + data);
 
-        HospDTO rDTO = Optional.ofNullable(hospService.getProductApiList(data)).orElseGet(() -> HospDTO.builder().build());
+        List<HospDTO> hospList = hospService.getProductApiList(data);
+        model.addAttribute("hospList", hospList); // 병원 정보 목록
+        model.addAttribute("data", data); // 검색 데이터
 
-        model.addAttribute("rDTO", rDTO);       // 병원 정보 DTO
-        model.addAttribute("data", data);       // 검색 데이터
+        log.info("hospList size: " + hospList.size());
 
-        log.info("rDTO : " + rDTO);
-
-
-
-
-        int res = 0;    // 비교용 변수
+        int res = 0; // 비교용 변수
 
         log.info("res : " + res);
         model.addAttribute("res", res);
@@ -74,17 +70,15 @@ public class HospController {
         return "hosp/searchHospResult";
     }
 
-
-
     /**
      * 병원 검색 화면으로 이동
      */
     @GetMapping(value = "itemSearch")
     public String itemSearch() {
 
-        log.info(this.getClass().getName() + ".allergy/itemSearch Start!");
+        log.info(this.getClass().getName() + ".hosp/itemSearch Start!");
 
-        log.info(this.getClass().getName() + ".allergy/itemSearch End!");
+        log.info(this.getClass().getName() + ".hosp/itemSearch End!");
 
         return "hosp/itemSearch";
     }
@@ -95,13 +89,30 @@ public class HospController {
     @GetMapping(value = "searchHospInfoResult")
     public String searchHospInfoResult() {
 
-        log.info(this.getClass().getName() + ".allergy/searchItemResult Start!");
+        log.info(this.getClass().getName() + ".hosp/searchItemResult Start!");
 
-        log.info(this.getClass().getName() + ".allergy/searchItemResult End!");
+        log.info(this.getClass().getName() + ".hosp/searchItemResult End!");
 
         return "hosp/searchHospInfoResult";
     }
 
+    @GetMapping("/hospMap") // URL 경로 수정
+    public String hospMap(HttpServletRequest request, ModelMap model) {
+        log.info(this.getClass().getName() + ".hospMap Start!"); // 메소드 로그 수정
+
+        String x = CmmUtil.nvl(request.getParameter("x"));
+        String y = CmmUtil.nvl(request.getParameter("y"));
+
+        log.info("x : " + x);
+        log.info("y : " + y);
+
+        model.addAttribute("x", x);
+        model.addAttribute("y", y);
+
+        log.info(this.getClass().getName() + ".hospMap End!"); // 메소드 로그 수정
+
+        return "hosp/hospMap";
+    }
 
 
 
