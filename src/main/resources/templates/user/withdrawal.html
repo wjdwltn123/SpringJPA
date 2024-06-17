@@ -3,15 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원 탈퇴</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/profile.css"/>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
-    <link href="/css/profile.css" rel="stylesheet" />
-    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="/js/withdrawal.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1c1c1b;
+            margin: 0;
+            padding: 0;
+        }
+
+        #userProfileWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        #userProfileContainer {
+            background-color: #1c1c1b;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #userProfileHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #userProfileHeader h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        #userProfileHeader ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #userProfileHeader ul li {
+            margin-left: 1rem;
+        }
+
+        #userProfileHeader ul li a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        #userProfileHeader ul li a:hover {
+            color: #ffffff;
+        }
+
+        #userProfileHeader img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .upiContainer-Full {
+            margin-top: 1.5rem;
+        }
+
+        .upiBlock {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .upiBlock p {
+            color: #ffffff;
+        }
+
+        .row {
+            margin-bottom: 1rem;
+        }
+
+        .row .col-sm-3 h6 {
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        .row .col-sm-9 input {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        .row button {
+            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .row button#btnWithdrawal {
+            background-color: #dc3545;
+            border: none;
+            color: #fff;
+        }
+
+        .row button#btnWithdrawal:hover {
+            background-color: #c82333;
+        }
+
+        .row button#btnBack {
+            background-color: #6c757d;
+            border: none;
+            color: #fff;
+        }
+
+        .row button#btnBack:hover {
+            background-color: #343a40;
+        }
+    </style>
 </head>
 <body>
-
 <section id="userProfileWrapper">
     <section id="userProfileContainer">
         <section id="userProfileHeader">
@@ -21,54 +142,39 @@
                 <li><a href="#">고객센터</a></li>
                 <li><a href="/notice/noticeList">게시판</a></li>
             </ul>
-            <img src="/assets/img/profile.png">
+            <img src="/assets/img/profile.png" alt="Profile Image">
         </section>
-        <section class="modifyBlock"></section>
+
         <section id="userProfileContent">
             <div class="upiContainer-Full">
                 <section class="upiBlock">
-                    회원탈퇴 시 모든 정보는 삭제되고 복구가 불가능합니다.
-                    <br>
-                    이에 동의하시면 "<span class="blue-text">탈퇴합니다.</span>" 를 입력해주세요.
+                    <p>회원탈퇴 시 모든 정보는 삭제되고 복구가 불가능합니다. 이에 동의하시면 "<span class="text-primary">탈퇴합니다.</span>" 를 입력해주세요.</p>
                     <hr>
                     <form name="f" id="f">
                         <div class="row mb-3">
                             <div class="col-sm-3">
                                 <h6 class="mb-0">입력문</h6>
                             </div>
-                            <br>
                             <div class="col-sm-9 text-secondary">
                                 <input type="text" class="form-control" name="agree" id="agree" placeholder="탈퇴합니다.">
                             </div>
                         </div>
                     </form>
                     <div class="row">
-                        <div class="px-4 my-4">
-                            <button id="btnWithdrawal" class="flex items-left justify-between w-1/10 px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple actionButton" type="button">
-                                <div class="w-full">
-                                    <span class="px-3 py-2 text-sm font-semibold">회원 탈퇴</span>
-                                    <span class="ml-2" aria-hidden="true">*</span>
-                                </div>
-                            </button>
-                            <button id="btnBack" class="flex items-left justify-between w-1/10 px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple actionButton" type="button" style="margin-left: 10px;">
-                                <div class="w-full">
-                                    <span class="px-3 py-2 text-sm font-semibold">돌아가기</span>
-                                    <span class="ml-2" aria-hidden="true"><</span>
-                                </div>
-                            </button>
+                        <div class="col-sm-12 d-flex justify-content-start">
+                            <button id="btnWithdrawal" class="btn btn-sm btn-danger mr-2" type="button">회원 탈퇴</button>
+                            <button id="btnBack" class="btn btn-sm btn-secondary" type="button">돌아가기</button>
                         </div>
                     </div>
                 </section>
             </div>
             <div class="upiContainer-Full">
-                <section class="upiBlock">
-                    <a href="/user/withdrawal"><h3>회원탈퇴 </h3></a>
-                    <div class="upiItem"><a href="/user/withdrawal">회원탈퇴 이동 <<< </a><p>회원탈퇴를 원하시면 상단의 글자를 클릭하세요!</p></div>
-                </section>
+
             </div>
         </section>
     </section>
 </section>
 
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

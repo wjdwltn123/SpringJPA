@@ -1,25 +1,18 @@
 package kopo.poly.controller;
 
-import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kopo.poly.dto.HospDTO;
-import kopo.poly.dto.UserInfoDTO;
 import kopo.poly.service.IHospService;
-import kopo.poly.service.impl.UserInfoService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequestMapping(value = "/hosp")
@@ -38,7 +31,7 @@ public class HospController {
 
         log.info(this.getClass().getName() + ".allergy/hospSearch End!");
 
-        return "hosp/hospSearch";
+        return "hospSearchMap";
 
     }
 
@@ -46,17 +39,25 @@ public class HospController {
      * 병원 찾기 결과 화면으로 이동
      */
     @GetMapping(value = "searchHospResult")
-    public String searchHospResult(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception{
-
+    public String searchHospResult(@RequestParam(value = "data", required = false) String searchData, ModelMap model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".searchHospResult Start!");
 
-        String data = CmmUtil.nvl(request.getParameter("data"));
+        String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+        log.info("userId : " + userId);
+        log.info("data : " + searchData);
 
-        log.info("data : " + data);
+        List<HospDTO> hospList;
+        if (searchData != null && !searchData.isEmpty()) {
+            // 검색어가 제공되면 해당 검색어로 병원을 필터링합니다.
+            hospList = hospService.getProductApiList(searchData);
+        } else {
+            // 검색어가 제공되지 않으면 모든 병원을 가져옵니다.
+            hospList = hospService.getProductApiList(searchData);
+        }
 
-        List<HospDTO> hospList = hospService.getProductApiList(data);
         model.addAttribute("hospList", hospList); // 병원 정보 목록
-        model.addAttribute("data", data); // 검색 데이터
+        model.addAttribute("data", searchData); // 검색 데이터
+        model.addAttribute("userId", userId); // 유저 아이디
 
         log.info("hospList size: " + hospList.size());
 
@@ -69,6 +70,7 @@ public class HospController {
 
         return "hosp/searchHospResult";
     }
+
 
     /**
      * 병원 검색 화면으로 이동
@@ -114,6 +116,37 @@ public class HospController {
         return "hosp/hospMap";
     }
 
+    // 특정 병원을 예약하는 서비스
+    @GetMapping("/hospCalender")
+    public String hospCalender() {
+
+        log.info(this.getClass().getName() + ".hosp/hospCalender Start!");
+
+        log.info(this.getClass().getName() + ".hosp/hospCalender End!");
+
+        return "hosp/hospCalender";
+    }
 
 
-}
+    // 최근 사용자가 조회한 병원 정보
+
+    @PostMapping("/saveHospInfo")
+    public Map<String, Object> saveHospInfo(@RequestBody Map<String,  Object> hospInfo, @RequestParam String username) {
+       Map<String, Object> response = new HashMap<>();
+
+
+
+
+return  null;
+
+    }
+
+
+
+    }
+
+
+
+
+
+

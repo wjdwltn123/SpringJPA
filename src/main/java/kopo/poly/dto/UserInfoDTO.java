@@ -29,6 +29,8 @@ public record UserInfoDTO (
 
         String existsYn
 
+
+
 ) {
 }
 

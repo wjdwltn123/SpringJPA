@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Management</title>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+  <script src="/js/ko.global.min.js"></script>
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script th:inline="javascript">
+    var rList = [[${rList}]];
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    #calendar {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .fc-day-sun a {
+      color: red;
+    }
+
+    .fc-day-sat a {
+      color: blue;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, textarea {
+      width: calc(100% - 22px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 80px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"] {
+      background-color: #28a745;
+      color: #fff;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    button[type="button"], button.btn-primary, button.btn-danger {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    button[type="button"]:hover, button.btn-primary:hover, button.btn-danger:hover {
+      background-color: #5a6268;
+    }
+
+    button.btn-primary {
+      background-color: #007bff;
+    }
+
+    button.btn-danger {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+<div class="content">
+  <a href="/html/index.html" class="button">돌아가기</a>
+  <a href="/hosp/searchHospResult" class="button">병원정보 확인</a>
+
+</div>
+
+
+
+<!-- 모달 창 - 일정 추가 -->
+<div id="eventModal" class="modal">
+  <div class="modal-content">
+    <h2>일정 추가</h2>
+    <form id="eventForm">
+      <label for="eventName">일정명:</label>
+      <input type="text" id="eventName" name="eventName"><br>
+      <label for="eventDate">일정 시작 날짜:</label>
+      <input type="date" id="eventDate" name="eventDate"><br>
+      <label for="eventEndDate">일정 종료 날짜:</label>
+      <input type="date" id="eventEndDate" name="eventEndDate"><br>
+      <label for="eventDescription">일정 설명:</label>
+      <textarea id="eventDescription" name="eventDescription"></textarea><br>
+      <button type="submit">저장</button>
+      <button id="closeModal" type="button">닫기</button>
+    </form>
+  </div>
+</div>
+
+<!-- 모달 창 - 일정 상세 정보 및 수정 -->
+<div id="eventDetailModal" class="modal">
+  <div class="modal-content">
+    <h2>일정 상세 정보 및 수정</h2>
+    <p><strong>일정 제목:</strong> <span id="eventDetailTitle"></span></p>
+    <p><strong>시작 일자:</strong> <span id="eventDetailStart"></span></p>
+    <p><strong>끝 일자:</strong> <span id="eventDetailEnd"></span></p>
+    <p><strong>일정 설명:</strong> <span id="eventDetailDescription"></span></p>
+    <button id="editEvent" class="btn btn-primary">수정</button>
+    <button id="deleteEvent" class="btn btn-danger">삭제</button>
+    <button id="closeDetailModal" type="button">닫기</button>
+  </div>
+</div>
+
+<div id="calendar"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: rList,
+      locale: 'ko',
+      eventClick: function (info) {
+        openModal('eventDetailModal');
+        var event = info.event;
+        if (info.el.classList.contains('fc-button')) {
+          return;
+        }
+
+        document.getElementById('eventDetailTitle').textContent = event.title;
+        document.getElementById('eventDetailStart').textContent = event.startStr;
+        document.getElementById('eventDetailEnd').textContent = event.endStr;
+        document.getElementById('eventDetailDescription').textContent = event.extendedProps.description;
+
+        currentEvent = event;
+      },
+      dateClick: function (info) {
+        openModal('eventModal');
+        document.getElementById('eventName').value = '';
+        document.getElementById('eventDate').value = info.dateStr;
+        document.getElementById('eventEndDate').value = '';
+        document.getElementById('eventDescription').value = '';
+        currentEvent = null;
+      }
+    });
+
+    calendar.render();
+
+    var currentEvent = null;
+    var currentModal = null;
+
+    function openModal(modalId) {
+      var modal = document.getElementById(modalId);
+      if (currentModal) {
+        currentModal.style.display = 'none';
+      }
+      modal.style.display = 'block';
+      currentModal = modal;
+    }
+
+    document.getElementById('closeModal').addEventListener('click', function () {
+      if (currentModal) {
+        currentModal.style.display = 'none';
+      }
+      document.getElementById('eventForm').reset();
+    });
+
+    window.addEventListener('click', function (event) {
+      if (event.target === currentModal) {
+        currentModal.style.display = 'none';
+        document.getElementById('eventForm').reset();
+      }
+    });
+
+    document.getElementById('closeDetailModal').addEventListener('click', function () {
+      if (currentModal) {
+        currentModal.style.display = 'none';
+        document.getElementById('eventDetailTitle').textContent = '';
+        document.getElementById('eventDetailStart').textContent = '';
+        document.getElementById('eventDetailEnd').textContent = '';
+        document.getElementById('eventDetailDescription').textContent = '';
+      }
+    });
+
+    document.getElementById('editEvent').addEventListener('click', function () {
+      if (currentEvent) {
+        openModal('eventModal');
+        document.getElementById('eventName').value = currentEvent.title;
+        document.getElementById('eventDate').value = currentEvent.startStr;
+        document.getElementById('eventEndDate').value = currentEvent.endStr;
+        document.getElementById('eventDescription').value = currentEvent.extendedProps.description;
+      }
+    });
+
+    document.getElementById('deleteEvent').addEventListener('click', function () {
+      if (currentEvent) {
+        var calendarSeq = currentEvent.extendedProps.calendarSeq;
+        $.ajax({
+          url: "/calendar/calendarDelete",
+          type: "post",
+          dataType: "JSON",
+          data: {"calendarSeq": calendarSeq},
+          success: function (json) {
+            alert(json.msg);
+            location.href = "/calendar/info";
+          }
+        });
+        currentEvent.remove();
+        currentModal.style.display = 'none';
+      }
+    });
+
+    document.getElementById('eventForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var eventName = document.getElementById('eventName').value;
+      var eventDate = document.getElementById('eventDate').value;
+      var eventEndDate = document.getElementById('eventEndDate').value;
+      var eventDescription = document.getElementById('eventDescription').value;
+
+      if (currentEvent) {
+        updateEvent(currentEvent.extendedProps.calendarSeq, eventName, eventDate, eventEndDate, eventDescription);
+      } else {
+        insertEvent(eventName, eventDate, eventEndDate, eventDescription);
+      }
+
+      if (currentModal) {
+        currentModal.style.display = 'none';
+      }
+      document.getElementById('eventForm').reset();
+    });
+
+    function insertEvent(eventName, eventDate, eventEndDate, eventDescription) {
+      $.ajax({
+        url: "/calendar/calendarInsert",
+        type: "post",
+        dataType: "JSON",
+        data: {
+          title: eventName,
+          start: eventDate,
+          end: eventEndDate,
+          description: eventDescription
+        },
+        success: function (json) {
+          alert(json.msg);
+          location.href = "/calendar/info";
+
+          var calendarSeq = json.calendarSeq;
+          calendar.addEvent({
+            calendarSeq: calendarSeq,
+            title: eventName,
+            start: eventDate,
+            end: eventEndDate,
+            extendedProps: {
+              description: eventDescription
+            }
+          });
+        }
+      });
+    }
+
+    function updateEvent(calendarSeq, eventName, eventDate, eventEndDate, eventDescription) {
+      $.ajax({
+        url: "/calendar/calendarUpdate",
+        type: "post",
+        dataType: "JSON",
+        data: {
+          "calendarSeq": calendarSeq,
+          title: eventName,
+          start: eventDate,
+          end: eventEndDate,
+          description: eventDescription
+        },
+        success: function (json) {
+          alert(json.msg);
+          location.href = "/calendar/info";
+        }
+      });
+
+      currentEvent.setProp('title', eventName);
+      currentEvent.setStart(eventDate);
+      currentEvent.setEnd(eventEndDate);
+      currentEvent.setExtendedProp('description', eventDescription);
+    }
+  });
+</script>
+</body>
+</html>

@@ -55,7 +55,7 @@
             padding: 8px 20px;
         }
 
-        .table-borderless td, .table-borderless th {
+        .table-borderless .row {
             border: none;
         }
 
@@ -64,49 +64,61 @@
         }
 
         #comments {
-            max-height: 500px; /* 원하는 최대 높이로 설정 */
-            overflow-y: auto; /* 세로 스크롤바 표시 */
+            max-height: 500px;
+            overflow-y: auto;
         }
 
-        /* #comments 요소의 스크롤바 너비 설정 */
         #comments::-webkit-scrollbar {
-            width: 14px; /* 스크롤바의 너비 */
-            border-radius: 6px; /* 스크롤바의 둥근 모서리 */
-            box-shadow: inset 0 0 5px lightgrey; /* 연한 회색으로 내부 그림자 효과 */
+            width: 14px;
+            border-radius: 6px;
+            box-shadow: inset 0 0 5px lightgrey;
         }
 
-        /* #comments 요소의 스크롤바 트랙 (배경) 스타일 */
         #comments::-webkit-scrollbar-track {
-            background: linear-gradient(to bottom, #f9f9f9, #e0e0e0); /* 상단에서 하단으로 연한 그라데이션 */
-            border-radius: 6px; /* 트랙의 둥근 모서리 */
+            background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+            border-radius: 6px;
         }
 
-        /* #comments 요소의 스크롤바 핸들 (움직이는 부분) 스타일 */
         #comments::-webkit-scrollbar-thumb {
             background: #bbbbbb;
-            border-radius: 6px; /* 핸들의 둥근 모서리 */
-            border: 2px solid transparent; /* 투명한 테두리 추가 */
-            background-clip: padding-box; /* 테두리 내부만 배경 색 적용 */
+            border-radius: 6px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
         }
 
         .grade-icon {
-            width: 20px; /* 아이콘 크기 조정 */
+            width: 20px;
             height: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .col, .th {
+            flex: 1;
+            padding: 0.5rem;
+        }
+
+        .col:nth-child(even) {
+            flex: 2;
+        }
+
+        .th {
+            font-weight: bold;
         }
 
     </style>
     <link rel="stylesheet" type="text/css" href="/css/noticeInfo.css"/>
 
-
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script th:inline="javascript">
-
-
         const session_user_id = [[${session.SS_USER_ID}]]; // Controller에서 받은 세션에 저장된 값
         const user_id = [[${rDTO.userId}]]; // 공지사항 게시글 작성자 아이디
         const nSeq = [[${rDTO.noticeSeq}]]; // 현재 글번호, 자바에서 받을 변수들은 자바스크립트 변수로 저장하면 편함
-
 
         $(document).ready(function () {
             $("#btnEdit").on("click", function () {
@@ -183,10 +195,6 @@
                 alert("본인이 작성한 글만 삭제 가능합니다.");
             }
         }
-
-        /*]]>*/
-
-
     </script>
 
     <script type="text/javascript">
@@ -197,15 +205,7 @@
         })
 
         function doSubmit() {
-
             let f = document.getElementById("f");
-            //
-            // if (f.contents.value === "") {
-            //     alert("내용을 입력하시기 바랍니다.");
-            //     f.contents.focus();
-            //     return;
-            // }
-
             $.ajax({
                     url: "/notice/commentInsert",
                     type: "post",
@@ -227,76 +227,64 @@
             <h2>게시글 상세보기</h2>
         </div>
         <div class="card-body">
-            <table class="table table-borderless">
-                <tr>
-                    <th>제목</th>
-                    <td th:text="${rDTO.title}"></td>
-                </tr>
-
-                <tr>
-                    <th>작성일</th>
-                    <td th:text="${rDTO.regDt}"></td>
-                </tr>
-                <tr>
-                    <th>조회수</th>
-                    <td th:text="${rDTO.readCnt}"></td>
-                </tr>
-                <tr>
-                    <th>내용</th>
-                    <td style="white-space: pre" th:text="${rDTO.contents}"></td>
-                </tr>
-            </table>
+            <div class="table-borderless">
+                <div class="row">
+                    <div class="th">제목</div>
+                    <div class="col" th:text="${rDTO.title}"></div>
+                </div>
+                <div class="row">
+                    <div class="th">작성일</div>
+                    <div class="col" th:text="${rDTO.regDt}"></div>
+                </div>
+                <div class="row">
+                    <div class="th">조회수</div>
+                    <div class="col" th:text="${rDTO.readCnt}"></div>
+                </div>
+                <div class="row">
+                    <div class="th">내용</div>
+                    <div class="col" style="white-space: pre" th:text="${rDTO.contents}"></div>
+                </div>
+            </div>
         </div>
         <hr>
         <div class="card my-4" style="box-shadow: none; margin-top: -0.7rem!important;">
-
-                <div class="card-body">
-
-
-                    <!-- 댓글 목록 -->
-
-                    <div id="comments">
-                        <div th:each="dto : ${rList}" class="mt-4" style="margin-top: 0.1rem!important">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 th:text="${dto.userId}">작성자 이름</h5>
-                                    <p style="white-space: pre" th:text="${dto.commentContents}">댓글 내용</p>
-                                </div>
-                                <span><p th:text="${dto.commentRegDt}">작성 시간 </span>
-                                <i class="fa-solid fa-square-xmark"
-                                   style="color: #858585; cursor: pointer"
-                                   th:data-comment-seq="${dto.commentSeq}"
-                                   th:data-user-id="${dto.userId}"
-                                   onclick="DeleteCommentSeq(this)"></i>
+            <div class="card-body">
+                <!-- 댓글 목록 -->
+                <div id="comments">
+                    <div th:each="dto : ${rList}" class="mt-4" style="margin-top: 0.1rem!important">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 th:text="${dto.userId}">작성자 이름</h5>
+                                <p style="white-space: pre" th:text="${dto.commentContents}">댓글 내용</p>
                             </div>
-                            <hr>
+                            <span><p th:text="${dto.commentRegDt}">작성 시간 </span>
+                            <i class="fa-solid fa-square-xmark"
+                               style="color: #858585; cursor: pointer"
+                               th:data-comment-seq="${dto.commentSeq}"
+                               th:data-user-id="${dto.userId}"
+                               onclick="DeleteCommentSeq(this)"></i>
                         </div>
+                        <hr>
                     </div>
-
-
-                    <form name="f" id="f">
+                </div>
+                <form name="f" id="f">
                     <div class="form-group" style="margin-top: -25px">
                         <label for="content"></label>
                         <textarea class="form-control" name="content" id="content" rows="3" placeholder="댓글을 입력하세요."
                                   required></textarea>
                     </div>
-                        <input type="hidden" name="noticeSeq" th:value="${rDTO.noticeSeq}"/>
-                    </form>
-                </div>
-
-
+                    <input type="hidden" name="noticeSeq" th:value="${rDTO.noticeSeq}"/>
+                </form>
+            </div>
             <div class="card-footer text-right" style="border-top: none; margin-top: -2rem; margin-bottom: -1.2rem;">
                 <button id="btnEdit" type="button" class="btn btn-primary">수정</button>
                 <button id="btnDelete" type="button" class="btn btn-danger">삭제</button>
-                <button id="btnSend" type="button" class="btn btn-warning">댓글 작성
-                </button>
-
+                <button id="btnSend" type="button" class="btn btn-warning">댓글 작성</button>
                 <button id="btnList" type="button" class="btn btn-secondary">목록</button>
             </div>
         </div>
     </div>
 </div>
 <br>
-
 </body>
 </html>

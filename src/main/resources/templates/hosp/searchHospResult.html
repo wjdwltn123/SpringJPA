@@ -7,44 +7,86 @@
     <link rel="stylesheet" href="/css/hospResult.css"/>
     <title>Hospital Information</title>
     <style>
+        /* General styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
         }
+
+        /* Container styles */
         .container {
-            max-width: 800px; /* 적절한 폭으로 조절하세요 */
+            max-width: 800px;
             margin: auto;
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        /* Heading styles */
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
         }
+
+        /* List styles */
         .hospital-list {
             list-style: none;
             padding: 0;
         }
+
+        /* Hospital item styles */
         .hospital-item {
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
+
+        .hospital-item:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Label styles */
         .label {
             font-weight: bold;
             color: #555;
         }
+
+        /* Detail link styles */
+        .detail-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .detail-link:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
+
 <body>
 <div class="container">
     <h1>병원 검색 조회 결과</h1>
     <hr>
+
+<!--    &lt;!&ndash; 검색 폼 &ndash;&gt;-->
+<!--    <form th:action="@{/hosp/searchHospResult}" method="get">-->
+<!--        <input type="text" name="data" placeholder="검색어를 입력하세요">-->
+<!--        <button type="submit">검색</button>-->
+<!--    </form>-->
+
 
     <!-- 병원 목록을 표시하는 템플릿 -->
     <ul class="hospital-list">
@@ -57,11 +99,15 @@
             <span class="label">영업상태 :</span> <span th:text="${hosp.trdstatenm}"></span><br>
 
             <!-- 병원 위치를 보여주는 지도로 이동하는 링크 -->
-            <a th:href="@{/hosp/hospMap(x=${hosp.x}, y=${hosp.y})}" class="detail-link">병원 위치 보기</a>
-
+            <a th:href="@{/hosp/hospMap(x=${hosp.x}, y=${hosp.y},
+                bplcnm=${hosp.bplcnm},
+                rdnwhladdr=${hosp.rdnwhladdr},
+                uptaenm=${hosp.uptaenm},
+               trdstatenm=${hosp.trdstatenm},
+                sitetel=${hosp.sitetel})}" class="detail-link">병원 위치 보기</a>
         </li>
     </ul>
-
 </div>
 </body>
+
 </html>

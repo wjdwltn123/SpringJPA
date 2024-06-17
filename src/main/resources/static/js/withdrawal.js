@@ -32,14 +32,14 @@ $(document).ready(function () {
 
                 if (json.result===0) {
 
-                    location.href = "html/index.html";
+                    location.href = "/user/login";
 
                 } else if (json.result===1){
 
 
                 } else {
 
-                    location.href = "/html/index";
+                    location.href = "/user/login";
 
                 }
             }

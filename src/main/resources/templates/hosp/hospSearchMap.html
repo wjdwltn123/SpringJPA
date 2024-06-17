@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/js/jquery.searializeObject.min.js"></script>
+    <title>Hospital Map Search</title>
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<h1>Hospital Map Search</h1>
+<label for="businessType">Business Type:</label>
+<input type="text" id="businessType" name="businessType">
+<button onclick="searchHospitals()">Search</button>
+
+<div id="map"></div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4783d4b6ae246ddb80ebc2ed2955ac74"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var map;
+    var markers = [];
+
+    // 지도 초기화
+    function initMap() {
+        var mapContainer = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 시청을 중심으로 초기화
+            level: 10 // 지도 확대 레벨
+        };
+        map = new kakao.maps.Map(mapContainer, options);
+    }
+
+    // 병원 정보 검색 및 표시
+    function searchHospitals() {
+
+
+         let businessType = document.getElementById("businessType").value
+             /*$('#businessType').innerText;*/
+        console.log("businessType : " + businessType)
+
+        $.ajax({
+            type: 'POST',
+            url: '/hospMap/HospSearchMap',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ businessType: businessType }),
+            success: function(response) {
+
+                console.log("response : " + response)
+                // 성공적으로 처리되었을 때의 동작
+            },
+            error: function(xhr, status, error) {
+                // 에러 발생 시 처리
+            }
+        });
+
+    }
+
+    // 마커 표시 함수
+    function displayMarkers(hospitals) {
+        // 기존 마커 제거
+        deleteMarkers();
+
+        // 병원 정보를 반복하여 마커 추가
+        hospitals.forEach(function(hospital) {
+            var markerPosition = new kakao.maps.LatLng(parseFloat(hospital.coordinateY), parseFloat(hospital.coordinateX));
+
+            var marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+
+            marker.setMap(map);
+            markers.push(marker);
+        });
+    }
+
+    // 기존 마커 삭제 함수
+    function deleteMarkers() {
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+    }
+
+    // 페이지 로드 시 지도 초기화
+    $(document).ready(function() {
+        initMap();
+    });
+</script>
+</body>
+</html>

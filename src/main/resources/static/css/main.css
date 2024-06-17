@@ -147,6 +147,30 @@ ul {
     margin-left: 10px;
 }
 
+
+.facility-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.facility-cards div {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 23%;
+    transition: transform 0.3s;
+}
+
+.facility-cards div:hover {
+    transform: scale(1.05);
+}
+
+
+
+
 /* Xbox */
 .xbox {
     width: 100%;
@@ -326,6 +350,22 @@ ul {
     }
 }
 
+.faq-item {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.question {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.answer {
+    display: none;
+    margin-top: 10px;
+}
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:700');
 
 /* Google 폰트 적용 */
@@ -369,6 +409,31 @@ ul {
      color: #2451d2; /* 텍스트 색상을 지정된 파란색으로 설정 */
  }
 
+.text-center {
+    text-align: center;
+}
+
+.mainText {
+    font-size: 2rem; /* 원하는 크기로 조정하세요 */
+    font-weight: bold; /* 원하는 폰트 두께로 조정하세요 */
+}
+
+.subText {
+    font-size: 1.5rem; /* 원하는 크기로 조정하세요 */
+    color: #666; /* 원하는 색상으로 조정하세요 */
+}
+
+
+.logo {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #343a40; /* 로고 텍스트 색상 */
+}
+
+.highlight {
+    color: #007bff; /* 강조 색상 */
+}
 
 
 /* 이미지에 적용될 스타일 */
@@ -383,7 +448,7 @@ body .logo-image {
 }
 
 .image-container {
-    text-align: center; /* 이미지를 가운데 정렬합니다 */
+
 }
 
 /* 또는 이미지에 직접 스타일을 적용 */

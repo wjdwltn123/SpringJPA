@@ -11,7 +11,6 @@
 
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico">
-
 </head>
 <body>
 <!-- 헤더 섹션 -->
@@ -21,10 +20,11 @@
 
 <!-- 메인 콘텐츠 섹션 -->
 <div class="content">
-    <h2>WTM 좌표를 WGS84 좌표로 변환하기</h2>
-    <p>WTM 좌표를 사용하여 병원의 위치를 지도에 표시합니다.</p>
+    <!-- 병원 이름을 표시할 곳 -->
+    <h2 id="hospital-title">WTM 좌표를 WGS84 좌표로 변환하기</h2>
     <div id="map"></div>
     <a href="/hosp/searchHospResult" class="button">돌아가기</a>
+    <a href="/calendar/info" class="button2">예약하기</a>
 </div>
 
 <!-- Kakao Map API 불러오기 -->
@@ -43,46 +43,44 @@
 
     // URL에서 매개 변수 가져오기
     var urlParams = new URLSearchParams(window.location.search);
-    var bplcnm = urlParams.get('bplcnm');
-    var rdnwhladdr = urlParams.get('rdnwhladdr');
-    var uptaenm = urlParams.get('uptaenm');
-    var sitetel = urlParams.get('sitetel');
+    var bplcnm = decodeURIComponent(urlParams.get('bplcnm') || '병원명 없음');
+    var rdnwhladdr = decodeURIComponent(urlParams.get('rdnwhladdr') || '주소 없음');
+    var uptaenm = decodeURIComponent(urlParams.get('uptaenm') || '업태 없음');
+    var sitetel = decodeURIComponent(urlParams.get('sitetel') || '전화번호 없음');
 
+    // 병원 이름을 제목에 표시
+    document.getElementById('hospital-title').textContent = `${bplcnm} 위치 보기`;
+
+    // document.getElementById('hospital-title').textContent = `${rdnwhladdr} 위치 보기`;
 
     // WTM 좌표를 WGS84 좌표로 변환합니다
     var wtmX = parseFloat(urlParams.get('x'));
     var wtmY = parseFloat(urlParams.get('y'));
 
     geocoder.transCoord(wtmX, wtmY, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                // 변환된 좌표로 마커를 표시합니다
-                var marker = new kakao.maps.Marker({
-                    position: new kakao.maps.LatLng(result[0].y, result[0].x), // 마커를 표시할 위치입니다
-                    map: map // 마커를 표시할 지도 객체입니다
-                });
+        if (status === kakao.maps.services.Status.OK) {
+            // 변환된 좌표로 마커를 표시합니다
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(result[0].y, result[0].x), // 마커를 표시할 위치입니다
+                map: map // 마커를 표시할 지도 객체입니다
+            });
 
-                // 마커 클릭 이벤트 처리
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    // 병원 정보를 표시할 요소에 데이터 채우기
-                    document.getElementById('hospitalName').textContent = "병원 이름: " + bplcnm;
-                    document.getElementById('hospitalAddress').textContent = "주소: " + rdnwhladdr;
-                    document.getElementById('hospitalTel').textContent = "전화번호: " + uptaenm;
-                    document.getElementById('hospitalStatus').textContent = "영업 상태: " + sitetel;
+            // 마커 클릭 이벤트 처리
+            kakao.maps.event.addListener(marker, 'click', function() {
+                // 병원 정보를 표시할 요소에 데이터 채우기
+                alert(`병원이름: ${bplcnm}\n주소: ${rdnwhladdr}\n업태: ${uptaenm}\n전화번호: ${sitetel}`);
 
-                    // 병원 정보를 표시할 div 보이기
-                    document.getElementById('hospitalInfo').style.display = 'block';
-                });
+            });
 
-                // 지도의 중심을 마커 위치로 이동합니다
-                map.setCenter(new kakao.maps.LatLng(result[0].y, result[0].x));
-            } else {
-                alert("좌표 변환에 실패했습니다. 좌표를 확인해주세요.");
-            }
-        },
-        {
-            input_coord: kakao.maps.services.Coords.WTM, // 입력 좌표계
-            output_coord: kakao.maps.services.Coords.WGS84 // 출력 좌표계
-        });
+            // 지도의 중심을 마커 위치로 이동합니다
+            map.setCenter(new kakao.maps.LatLng(result[0].y, result[0].x));
+        } else {
+            alert("좌표 변환에 실패했습니다. 좌표를 확인해주세요.");
+        }
+    }, {
+        input_coord: kakao.maps.services.Coords.WTM, // 입력 좌표계
+        output_coord: kakao.maps.services.Coords.WGS84 // 출력 좌표계
+    });
 </script>
 </body>
 </html>

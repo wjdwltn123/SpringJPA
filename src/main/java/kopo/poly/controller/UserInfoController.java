@@ -28,7 +28,6 @@ public class UserInfoController {
     private final IUserInfoService userInfoService;
 
 
-
     // 회원가입 화면으로 이동
 
     @GetMapping(value = "userRegForm")
@@ -265,11 +264,21 @@ public class UserInfoController {
     @GetMapping(value = "/index")                    // main page
     public String index(HttpSession session ,ModelMap model) throws Exception {
 
-        log.info(this.getClass().getName() + ".profile 함수 실행");
+        log.info(this.getClass().getName() + ".index 함수 실행");
+
+
 
         String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
 
-        model.addAttribute("userId", userId);
+        if (userId != null) {
+
+
+            model.addAttribute("userId", userId);
+
+        } else {
+            return "user/login";
+        }
+
 
         return "user/profile";
     }

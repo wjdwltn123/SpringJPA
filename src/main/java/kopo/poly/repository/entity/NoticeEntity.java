@@ -13,7 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Builder
 @Entity
-public class    NoticeEntity {
+public class NoticeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
